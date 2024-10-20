@@ -1,11 +1,15 @@
+import { Article } from './article';
+
 export class Paper {
     private id?: number;
     private date: Date;
+    private articles: Article[] = [];
 
-    constructor(paper: { id?: number; date: Date }) {
+    constructor(paper: { id?: number; date: Date; articles: Article[]; }) {
         this.validate(paper);
         this.id = paper.id;
         this.date = paper.date;
+        this.articles = paper.articles;
     }
 
     getId(): number | undefined {
@@ -14,6 +18,10 @@ export class Paper {
 
     getDate(): Date {
         return this.date;
+    }
+
+    getArticles(): Article[] {
+        return this.articles;
     }
 
     validate(paper: { date: Date }) {

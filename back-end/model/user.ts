@@ -1,3 +1,7 @@
+import { Article } from "./article";
+import { Review } from "./review";
+import { ArticleLikes } from "./articlelikes";
+
 export class User {
     private id?: number;
     private firstName: string;
@@ -6,8 +10,12 @@ export class User {
     private username: string;
     private password: string;
     private role: string;
+    private reviews: Review[] = [];
+    private articles: Article[] = [];
+    private articleLikes: ArticleLikes[] = [];
 
-    constructor(user: { id?: number; firstName: string; lastName: string; email: string; username: string; password: string; role: string }) {
+
+    constructor(user: { id?: number; firstName: string; lastName: string; email: string; username: string; password: string; role: string; reviews: Review[]; articles: Article[];  articleLikes: ArticleLikes[]; }) {
         this.validate(user);
         this.id = user.id;
         this.firstName = user.firstName;
@@ -16,6 +24,9 @@ export class User {
         this.username = user.username;
         this.password = user.password;
         this.role = user.role;
+        this.reviews = user.reviews;
+        this.articles = user.articles;
+        this.articleLikes = user.articleLikes;
     }
 
     getId(): number | undefined {
@@ -38,8 +49,24 @@ export class User {
         return this.username;
     }
 
+    getPassword(): string {
+        return this.password;
+    }
+
     getRole(): string {
         return this.role;
+    }
+
+    getReviews(): Review[] {
+        return this.reviews;
+    }
+
+    getArticles(): Article[] {
+        return this.articles;
+    }
+
+    getArticleLikes(): ArticleLikes[] {
+        return this.articleLikes;
     }
 
     validate(user: { email: string; password: string }) {

@@ -1,3 +1,8 @@
+import { User } from './user';
+import { Paper } from './paper';
+import { Review } from './review';
+import { ArticleLikes } from './articlelikes';
+
 export class Article {
     private id?: number;
     private title: string;
@@ -5,8 +10,12 @@ export class Article {
     private picture: string;
     private publishedAt: Date;
     private articleType: string;
+    private user: User;
+    private paper: Paper;
+    private reviews: Review[] = [];
+    private articleLikes: ArticleLikes[] = [];
 
-    constructor(article: { id?: number; title: string; summary: string; picture: string; publishedAt: Date; articleType: string }) {
+    constructor(article: { id?: number; title: string; summary: string; picture: string; publishedAt: Date; articleType: string; user: User; paper: Paper; reviews: Review[]; articleLikes: ArticleLikes[] }) {
         this.validate(article);
         this.id = article.id;
         this.title = article.title;
@@ -14,6 +23,10 @@ export class Article {
         this.picture = article.picture;
         this.publishedAt = article.publishedAt;
         this.articleType = article.articleType;
+        this.user = article.user;
+        this.paper = article.paper;
+        this.reviews = article.reviews;
+        this.articleLikes = article.articleLikes;
     }
 
     getId(): number | undefined {
@@ -38,6 +51,22 @@ export class Article {
 
     getArticleType(): string {
         return this.articleType;
+    }
+
+    getUser(): User {
+        return this.user;
+    }
+
+    getPaper(): Paper {
+        return this.paper;
+    }
+
+    getReviews(): Review[] {
+        return this.reviews;
+    }
+
+    getArticleLikes(): ArticleLikes[] {
+        return this.articleLikes;
     }
 
     validate(article: { title: string; summary: string; picture: string; publishedAt: Date; articleType: string }) {
