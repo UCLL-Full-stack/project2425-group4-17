@@ -5,11 +5,13 @@ export class ArticleLikes {
     private id?: number;
     private user: User;
     private article: Article;
+    private date: Date;
 
-    constructor(articleLikes: { id?: number; user: User; article: Article }) {
+    constructor(articleLikes: { id?: number; user: User; article: Article;date: Date; }) {
         this.id = articleLikes.id;
         this.user = articleLikes.user;
         this.article = articleLikes.article;
+        this.date = articleLikes.date;
     }
 
     getId(): number | undefined {
@@ -24,9 +26,14 @@ export class ArticleLikes {
         return this.article;
     }
 
+    getDate():Date{
+        return this.date;
+    }
+
     equals(articleLikes: ArticleLikes): boolean {
         return this.id === articleLikes.getId() &&
          this.user.equals(articleLikes.getUser()) &&
-         this.article.equals(articleLikes.getArticle());
+         this.article.equals(articleLikes.getArticle())&&
+         this.date.getTime() === articleLikes.getDate().getTime();
     }
 }

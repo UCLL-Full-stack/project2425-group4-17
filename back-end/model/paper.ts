@@ -3,12 +3,16 @@ import { Article } from './article';
 export class Paper {
     private id?: number;
     private date: Date;
+    private namePaper: string;
+    private namePublisher: string;
     private articles: Article[] = [];
 
-    constructor(paper: { id?: number; date: Date; articles: Article[]; }) {
+    constructor(paper: { id?: number; date: Date;namePaper: string;namePublisher: string; articles: Article[]; }) {
         this.validate(paper);
         this.id = paper.id;
         this.date = paper.date;
+        this.namePaper = paper.namePaper;
+        this.namePublisher = paper.namePublisher;
         this.articles = paper.articles;
     }
 
@@ -18,6 +22,14 @@ export class Paper {
 
     getDate(): Date {
         return this.date;
+    }
+
+    getNamrPaper(): string{
+        return this.namePaper;
+    }
+
+    getNamePublisher(): string{
+        return this.namePublisher;
     }
 
     getArticles(): Article[] {
