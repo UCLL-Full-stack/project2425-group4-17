@@ -86,4 +86,34 @@ export class Article {
          this.title === article.getTitle() &&
          this.publishedAt.getTime() === article.getPublishedAt().getTime();
     }
+    toJSON() {
+        return {
+            id: this.id,
+            title: this.title,
+            summary: this.summary,
+            picture: this.picture,
+            publishedAt: this.publishedAt,
+            articleType: this.articleType,
+            user: this.user,
+            paper: this.paper,
+            reviews: this.reviews.map(review => ({
+                id: review.getId(),
+                title: review.getTitle(),
+                content: review.getContent(),
+                rating: review.getRating(),
+                user: {
+                    id: review.getUser().getId(),
+                    username: review.getUser().getUsername(),
+                },
+            })),
+            articleLikes: this.articleLikes.map(like => ({
+                id: like.getId(),
+                user: {
+                    id: like.getUser().getId(),
+                    username: like.getUser().getUsername(),
+                },
+                date: like.getDate(),
+            })),
+        };
+    }
 }

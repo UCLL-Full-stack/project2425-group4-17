@@ -46,4 +46,19 @@ export class Paper {
         return this.id === paper.getId() && 
         this.date.getTime() === paper.getDate().getTime();
     }
+
+    toJSON() {
+        return {
+            id: this.id,
+            date: this.date,
+            namePaper: this.namePaper,
+            namePublisher: this.namePublisher,
+            articles: this.articles.map(article => ({
+                id: article.getId,
+                title: article.getTitle,
+                summary: article.getSummary,
+            })),
+        };
+    }
+    
 }

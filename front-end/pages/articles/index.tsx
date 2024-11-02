@@ -1,4 +1,3 @@
-// pages/articles/index.tsx
 import Head from 'next/head';
 import Header from '@components/header';
 import styles from '@styles/home.module.css';
@@ -9,6 +8,7 @@ import ArticlesOverviewTable from '@components/articles/ArticlesOverviewTable';
 
 const Articles: React.FC = () => {
     const [articles, setArticles] = useState<Array<Article>>([]);
+    const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
 
     const getArticles = async () => {
         try {
@@ -39,13 +39,14 @@ const Articles: React.FC = () => {
                 <title>Articles</title>
             </Head>
             <Header />
-            <main className="d-flex flex-column justify-content-center align-items-center">
+            <main className="d-flex flex-column justify-content-start align-items-start">
                 <h1>Articles</h1>
-                <section>
-                    <h2>Articles overview</h2>
-                </section>
                 {articles.length > 0 ? (
-                    <ArticlesOverviewTable articles={articles} />
+                    <ArticlesOverviewTable 
+                        articles={articles} 
+                        onSelectArticle={setSelectedArticle} 
+                        selectedArticle={selectedArticle}
+                    />
                 ) : (
                     <p>No articles found or could not load articles.</p>
                 )}
