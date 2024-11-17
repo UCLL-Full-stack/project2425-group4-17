@@ -151,8 +151,8 @@ const articles = [
 
 const addArticle = (articleData: Article): Article => {
     const newId = articles.length ? Math.max(...articles.map(a => a.getId())) + 1 : 1;
-
     
+
     const newArticle = new Article({
         id: newId,
         title: articleData.getTitle() ?? "Untitled Article",
@@ -166,7 +166,6 @@ const addArticle = (articleData: Article): Article => {
         articleLikes:  [],
     });
 
-    // Add the new article to the array
     articles.push(newArticle);
 
     return newArticle;

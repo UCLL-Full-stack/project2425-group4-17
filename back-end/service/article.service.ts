@@ -8,7 +8,7 @@ const getArticlesByDate = (date: Date): Article[] => {
     return articleDb.getArticlesByDate({ date });
 };
 
-const editArticle = (id: number, updatedData: Partial<Article>) => {
+const editArticle = (id: number, updatedData: Article) => {
     return articleDb.editArticle(id, updatedData);
 };
 
