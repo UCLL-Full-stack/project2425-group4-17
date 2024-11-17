@@ -147,13 +147,40 @@ const articles = [
     article5,
 ];
 
+
+
+const addArticle = (articleData: Article): Article => {
+    const newId = articles.length ? Math.max(...articles.map(a => a.getId() || 0)) + 1 : 1;
+    const newArticle = new Article({ ...articleData, id: newId });
+    articles.push(newArticle);
+    return newArticle;
+};
+
+
+
 const getAllArticles = (): Article[] => articles;
 
 const getArticlesByDate = ({ date }: { date: Date }): Article[] => { 
     return articles.filter((article) => article.getPublishedAt() === date);
 };
+const editArticle = (id: number, updatedData: Partial<Article>): Article | null => {
+    const index = articles.findIndex((article) => article.getId() === id);
+    if (index === -1) return null;
 
-export default{
+    const existingArticle = articles[index];
+    const updatedArticle = new Article({
+        ...existingArticle,
+        ...updatedData,
+        id: existingArticle.getId(), // Ensure ID remains unchanged
+    });
+
+    articles[index] = updatedArticle;
+    return updatedArticle;
+};
+
+export default {
     getAllArticles,
-    getArticlesByDate
+    getArticlesByDate,
+    addArticle,
+    editArticle,
 };

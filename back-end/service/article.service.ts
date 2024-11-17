@@ -8,4 +8,17 @@ const getArticlesByDate = (date: Date): Article[] => {
     return articleDb.getArticlesByDate({ date });
 };
 
-export default {getAllArticles,getArticlesByDate}
+const editArticle = (id: number, updatedData: Partial<Article>) => {
+    return articleDb.editArticle(id, updatedData);
+};
+
+const addArticle = (articleData: any) => {
+    return articleDb.addArticle(articleData);
+};
+
+export default {
+    getAllArticles,
+    getArticlesByDate,
+    addArticle,
+    editArticle,
+};
