@@ -150,7 +150,7 @@ const articles = [
 
 
 const addArticle = (articleData: Article): Article => {
-    const newId = articles.length ? Math.max(...articles.map(a => a.getId())) + 1 : 1;
+    const newId = articles.length + 1;
     
 
     const newArticle = new Article({
