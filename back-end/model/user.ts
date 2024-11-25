@@ -1,3 +1,4 @@
+import { User as UserPrisma } from '@prisma/client';
 import { Article } from "./article";
 import { Review } from "./review";
 import { ArticleLikes } from "./articlelikes";
@@ -84,4 +85,28 @@ export class User {
         this.email === user.getEmail() && 
         this.username === user.getUsername();
     }
+
+    static from({
+    id,
+    username,
+    firstName,
+    lastName,
+    email,
+    role,
+    password,
+}: UserPrisma): User {
+    return new User({
+        id,
+        username,
+        firstName,
+        lastName,
+        email,
+        role,
+        password,
+        reviews: [],
+        articles: [],
+        articleLikes: [],
+    });
+}
+
 }
