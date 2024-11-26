@@ -58,9 +58,24 @@ const createUser = async (user: User): Promise<User> => {
     }
 };
 
+const updateUser = async (id: number, updates: Partial<{ firstName: string; lastName: string; username: string }>): Promise<User> => {
+    try {
+        const userPrisma = await database.user.update({
+            where: { id },
+            data: updates,
+        });
+
+        return User.from(userPrisma);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Error updating user in the database.');
+    }
+};
+
 export default {
     getAllUsers,
     getUserById,
     getUserByUsername,
-    createUser
+    createUser,
+    updateUser
 };

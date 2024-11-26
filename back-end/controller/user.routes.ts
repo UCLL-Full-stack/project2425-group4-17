@@ -173,6 +173,66 @@ userRouter.post('/login', async (req: Request, res: Response, next: NextFunction
     }
 });
 
+/**
+ * @swagger
+ * /users/{id}:
+ *   patch:
+ *     summary: Edit an existing user's details (firstName, lastName, username)
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: User ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               username:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User successfully updated.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad request or validation error.
+ */
+userRouter.patch(
+    '/:id',
+    async (req: Request<{ id: string }, {}, { firstName?: string; lastName?: string; username?: string }>, res: Response, next: NextFunction) => {
+        try {
+            const userId = parseInt(req.params.id, 10);
+            const updates = req.body;
 
+            if (isNaN(userId)) {
+                return res.status(400).json({ error: 'Invalid user ID.' });
+            }
+
+            const updatedUser = await userService.updateUser(userId, updates);
+
+            res.status(200).json({
+                id: updatedUser.getId(),
+                firstName: updatedUser.getFirstName(),
+                lastName: updatedUser.getLastName(),
+                username: updatedUser.getUsername(),
+                email: updatedUser.getEmail(),
+                role: updatedUser.getRole(),
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+);
 
 export { userRouter };

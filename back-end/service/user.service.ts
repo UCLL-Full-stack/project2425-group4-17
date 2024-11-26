@@ -39,6 +39,18 @@ const createUser = async ({username, firstName, lastName, email, role, password 
     return await userDB.createUser(newUser);
 };
 
+const updateUser = async (id: number, updates: Partial<{ firstName: string; lastName: string; username: string }>): Promise<User> => {
+    if (updates.username) {
+        const existingUser = await userDB.getUserByUsername({ username: updates.username });
+        if (existingUser && existingUser.getId() !== id) {
+            throw new Error(`Username "${updates.username}" is already taken by another user.`);
+        }
+    }
+
+    return await userDB.updateUser(id, updates);
+};
+
+
 const authenticate = async ({ username, password }: UserInput): Promise<AuthenticationResponse> => {
     if (!username || !password) {
         throw new Error('Username and password are required');
@@ -58,4 +70,4 @@ const authenticate = async ({ username, password }: UserInput): Promise<Authenti
     };
 };
 
-export default { getAllUsers, getUserByUsername, createUser, authenticate };
+export default { getAllUsers, getUserByUsername, createUser, updateUser, authenticate };
