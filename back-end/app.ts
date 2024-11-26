@@ -15,9 +15,6 @@ const port = process.env.APP_PORT || 3000;
 app.use(cors({ origin: 'http://localhost:8080' }));
 app.use(bodyParser.json());
 
-app.use('/articles', articleRouter);
-app.use('/users', userRouter);
-
 app.get('/status', (req, res) => {
     res.json({ message: 'Back-end is running...' });
 });
@@ -43,6 +40,9 @@ app.use(
        path: ['/api-docks', /^\/api-docks\/.*/,'/users/login','/users/signup','/status'],   
    })
 );
+
+app.use('/articles', articleRouter);
+app.use('/users', userRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     if (err.name === 'UnauthorizedError') {

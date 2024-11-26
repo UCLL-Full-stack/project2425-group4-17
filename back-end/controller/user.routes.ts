@@ -176,7 +176,9 @@ userRouter.post('/login', async (req: Request, res: Response, next: NextFunction
 /**
  * @swagger
  * /users/{id}:
- *   patch:
+ *   put:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Edit an existing user's details (firstName, lastName, username)
  *     parameters:
  *       - in: path
@@ -208,7 +210,7 @@ userRouter.post('/login', async (req: Request, res: Response, next: NextFunction
  *       400:
  *         description: Bad request or validation error.
  */
-userRouter.patch(
+userRouter.put(
     '/:id',
     async (req: Request<{ id: string }, {}, { firstName?: string; lastName?: string; username?: string }>, res: Response, next: NextFunction) => {
         try {
