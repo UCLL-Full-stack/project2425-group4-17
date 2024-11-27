@@ -14,7 +14,15 @@ type AuthenticationResponse = {
     fullname: string;
 };
 
+type PaperInput = {
+    date: Date;
+    namePaper: string;
+    namePublisher: string;
+  };
+  
+
 export {
     UserInput,
     AuthenticationResponse,
+    PaperInput,
 };
