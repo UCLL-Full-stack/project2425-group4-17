@@ -72,10 +72,22 @@ const updateUser = async (id: number, updates: Partial<{ firstName: string; last
     }
 };
 
+const deleteUser = async (id: number): Promise<void> => {
+    try {
+        await database.user.delete({
+            where: { id },
+        });
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. Unable to delete user.');
+    }
+};
+
 export default {
     getAllUsers,
     getUserById,
     getUserByUsername,
     createUser,
-    updateUser
+    updateUser,
+    deleteUser
 };

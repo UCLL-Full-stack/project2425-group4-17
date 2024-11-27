@@ -70,4 +70,13 @@ const authenticate = async ({ username, password }: UserInput): Promise<Authenti
     };
 };
 
-export default { getAllUsers, getUserByUsername, createUser, updateUser, authenticate };
+const deleteUser = async (id: number): Promise<void> => {
+    try {
+        await userDB.deleteUser(id);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Error deleting user from the database.');
+    }
+};
+
+export default { getAllUsers, getUserByUsername, createUser, updateUser, authenticate, deleteUser };

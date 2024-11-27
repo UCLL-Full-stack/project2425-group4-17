@@ -237,4 +237,35 @@ userRouter.put(
     }
 );
 
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Delete a user by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: User ID to delete
+ *     responses:
+ *       204:
+ *         description: User successfully deleted.
+ *       400:
+ *         description: Bad request or validation error.
+ */
+userRouter.delete('/:id', async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+    try {
+        const userId = parseInt(req.params.id, 10);
+
+        await userService.deleteUser(userId);
+        res.sendStatus(204);
+    } catch (error) {
+        next(error);
+    }
+});
+
 export { userRouter };
