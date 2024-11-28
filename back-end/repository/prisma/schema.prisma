@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  firstName    String
+  lastName     String
+  email        String        @unique
+  username     String        @unique
+  password     String
+  role         String
+  articles     Article[]     // One-to-many with Article
+  reviews      Review[]      // One-to-many with Review
+  articleLikes ArticleLike[] // Many-to-many via ArticleLike
+}
+
+model Article {
+  id           Int           @id @default(autoincrement())
+  title        String
+  summary      String
+  picture      String
+  publishedAt  DateTime
+  articleType  String
+  userId       Int
+  paperId      Int?
+  user         User          @relation(fields: [userId], references: [id])
+  paper        Paper?        @relation(fields: [paperId], references: [id])
+  reviews      Review[]      // One-to-many with Review
+  articleLikes ArticleLike[] // Many-to-many via ArticleLike
+}
+
+model Paper {
+  id           Int           @id @default(autoincrement())
+  date         DateTime
+  namePaper    String
+  namePublisher String
+  articles     Article[]     // One-to-many with Article
+}
+
+model Review {
+  id           Int           @id @default(autoincrement())
+  content      String
+  rating       Int
+  userId       Int
+  articleId    Int
+  user         User          @relation(fields: [userId], references: [id])
+  article      Article       @relation(fields: [articleId], references: [id])
+}
+
+model ArticleLike {
+  id           Int           @id @default(autoincrement())
+  userId       Int
+  articleId    Int
+  date         DateTime
+  user         User          @relation(fields: [userId], references: [id])
+  article      Article       @relation(fields: [articleId], references: [id])
+  
+  @@unique([userId, articleId]) 
+}

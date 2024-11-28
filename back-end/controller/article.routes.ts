@@ -87,6 +87,8 @@ articleRouter.get('/:date', async (req: Request, res: Response, next: NextFuncti
  * @swagger
  * /articles:
  *   post:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Add a new article.
  *     requestBody:
  *       required: true
@@ -114,6 +116,8 @@ articleRouter.post('/', async (req: Request, res: Response, next: NextFunction) 
  * @swagger
  * /articles/{id}:
  *   put:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Edit an existing article.
  *     parameters:
  *       - in: path
