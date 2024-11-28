@@ -147,13 +147,67 @@ const articles = [
     article5,
 ];
 
+
+
+const addArticle = (articleData: Article): Article => {
+    const newId = articles.length + 1;
+    
+
+    const newArticle = new Article({
+        id: newId,
+        title: articleData.getTitle() ?? "Untitled Article",
+        summary: articleData.getSummary(),
+        picture: articleData.getPicture(),
+        publishedAt: new Date(),
+        articleType: articleData.getArticleType(),
+        user: articleData.getUser(),
+        paper: articleData.getPaper(),
+        reviews:  [],
+        articleLikes:  [],
+    });
+
+    articles.push(newArticle);
+
+    return newArticle;
+};
+
+
+
+
 const getAllArticles = (): Article[] => articles;
 
 const getArticlesByDate = ({ date }: { date: Date }): Article[] => { 
     return articles.filter((article) => article.getPublishedAt() === date);
 };
 
-export default{
+const editArticle = (id: number, updatedData: Article): Article | null => {
+    const index = articles.findIndex((article) => article.getId() === id);
+    if (index === -1) return null;
+    const existingArticle = articles[index];
+   
+    const updatedArticle = new Article({
+        id: existingArticle.getId(), 
+        title: updatedData.getTitle(),
+        summary: updatedData.getSummary(),
+        picture: updatedData.getPicture(),
+        publishedAt: updatedData.getPublishedAt(),
+        articleType: updatedData.getArticleType(),
+        user: updatedData.getUser(),
+        paper: updatedData.getPaper(),
+        reviews: updatedData.getReviews(),
+        articleLikes: updatedData.getArticleLikes(),
+    });
+
+
+    articles[index] = updatedArticle;
+
+    return updatedArticle;
+};
+
+
+export default {
     getAllArticles,
-    getArticlesByDate
+    getArticlesByDate,
+    addArticle,
+    editArticle,
 };

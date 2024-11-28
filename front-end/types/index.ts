@@ -15,3 +15,8 @@ export type Article = {
     reviews: Review[];
     articleLikes: ArticleLikes[];
 };
+
+export type StatusMessage = {
+    message: string;
+    type: "error" | "success";
+};
