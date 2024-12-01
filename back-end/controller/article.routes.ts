@@ -1,25 +1,3 @@
-/**
- * @swagger
- *   components:
- *    securitySchemes:
- *     bearerAuth:
- *      type: http
- *      scheme: bearer
- *      bearerFormat: JWT
- *    schemas:
- *      Lecturer:
- *          type: object
- *          properties:
- *            id:
- *              type: number
- *              format: int64
- *            name:
- *              type: string
- *              description: Lecturer name.
- *            expertise:
- *              type: string
- *              description: Lecturer expertise.
- */
 import express, { NextFunction, Request, Response } from 'express';
 import articleService from '../service/article.service';
 
@@ -40,7 +18,7 @@ const articleRouter = express.Router();
  *               items:
  *                  $ref: '#/components/schemas/article'
  */
-    articleRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
+articleRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const articles = await articleService.getAllArticles();
         res.status(200).json(articles);
@@ -56,24 +34,26 @@ const articleRouter = express.Router();
  *      summary: Get articles by date.
  *      parameters:
  *          - in: path
- *            name: id
+ *            name: date
  *            schema:
- *              type: integer
+ *              type: string
+ *              format: date
  *              required: true
  *              description: The article publishedAt date.
  *      responses:
  *          200:
- *              description: A Articles List.
+ *              description: A list of articles for the given date.
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/Article'
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/Article'
  */
 articleRouter.get('/:date', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const date = new Date(req.params.date);
         if (isNaN(date.getTime())) {
-            // Handle invalid date format
             return res.status(400).json({ error: "Invalid date format" });
         }
         const articles = await articleService.getArticlesByDate(date);
@@ -153,4 +133,37 @@ articleRouter.put('/:id', async (req: Request, res: Response, next: NextFunction
     }
 });
 
-export {articleRouter}
+/**
+ * @swagger
+ * /articles/{id}:
+ *   delete:
+ *     summary: Delete an article by ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the article to delete.
+ *     responses:
+ *       200:
+ *         description: Article deleted successfully.
+ *       404:
+ *         description: Article not found.
+ *       400:
+ *         description: Invalid request data.
+ */
+articleRouter.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        if (isNaN(id)) {
+            return res.status(400).json({ error: 'Invalid article ID' });
+        }
+        await articleService.deleteArticle(id);
+        res.status(200).json({ message: 'Article deleted successfully' });
+    } catch (error) {
+        next(error);
+    }
+});
+
+export { articleRouter };
