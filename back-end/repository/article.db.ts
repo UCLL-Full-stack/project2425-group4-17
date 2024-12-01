@@ -155,8 +155,7 @@ const addArticle = async (articleData: Article): Promise<Article> => {
                 picture: articleData.getPicture(),
                 publishedAt: new Date(),
                 articleType: articleData.getArticleType(),
-                userId: articleData.getUser()?.getId(), // Assuming user is an object with an ID
-                paperId: articleData.getPaper()?.getId(), // Assuming paper is an object with an ID
+                paperId: articleData.getPaper()?.getId(),
                 reviews: {
                     create: [], // Placeholder for any initial reviews
                 },

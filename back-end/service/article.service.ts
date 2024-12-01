@@ -5,9 +5,8 @@ import { ar } from "date-fns/locale";
 const getAllArticles = (): Promise<Article[]>=>articleDb.getAllArticles();
 
 const getArticlesByDate = async (date: Date): Promise<Article[]> => {
-    return await articleDb.getArticlesByDate({ date });
+    return await articleDb.getArticlesByDate({ date }); 
 };
-
 const getArticleById = async (id: number): Promise<Article | null> => {
     return await articleDb.getArticleById(id);
 };
@@ -21,7 +20,6 @@ const addArticle = async (articleData: Article): Promise<Article> => {
             picture: articleData.getPicture(),
             publishedAt: new Date(),
             articleType: articleData.getArticleType(),
-            userId: articleData.getUser()?.getId(),
             paperId: articleData.getPaper()?.getId(),
             reviews: [],
             articleLikes: [],

@@ -10,7 +10,6 @@ export class Article {
     private picture: string;
     private publishedAt: Date;
     private articleType: string;
-    private user: User;
     private paper: Paper;
     private reviews: Review[] = [];
     private articleLikes: ArticleLikes[] = [];
@@ -23,7 +22,6 @@ export class Article {
         this.picture = article.picture;
         this.publishedAt = article.publishedAt;
         this.articleType = article.articleType;
-        this.user = article.user;
         this.paper = article.paper;
         this.reviews = article.reviews;
         this.articleLikes = article.articleLikes;
@@ -53,9 +51,9 @@ export class Article {
         return this.articleType;
     }
 
-    getUser(): User {
-        return this.user;
-    }
+    // getUser(): User {
+    //     return this.user;
+    // }
 
     getPaper(): Paper {
         return this.paper;
@@ -94,7 +92,6 @@ export class Article {
             picture: this.picture,
             publishedAt: this.publishedAt,
             articleType: this.articleType,
-            user: this.user,
             paper: this.paper,
             reviews: this.reviews.map(review => ({
                 id: review.getId(),
