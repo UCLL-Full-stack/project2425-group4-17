@@ -1,70 +1,17 @@
 import express, { Request, Response, NextFunction } from 'express';
-import paperService from '../service/paper.service';
+import articleLikesService from '../service/articleLikes.service';
+import { ensureAuthenticated } from '../middleware/auth.middleware'; // Ensures user is logged in
 
-const paperRouter = express.Router();
-
-/**
- * @swagger
- * /papers:
- *   get:
- *     security:
- *       - bearerAuth: []
- *     summary: Get a list of all papers
- *     responses:
- *       200:
- *         description: A list of papers.
- */
-paperRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const papers = await paperService.getAllPapers();
-        res.status(200).json(papers);
-    } catch (error) {
-        next(error);
-    }
-});
+const articleLikesRouter = express.Router();
 
 /**
  * @swagger
- * /papers/{id}:
- *   get:
- *     security:
- *       - bearerAuth: []
- *     summary: Get a specific paper by ID
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: A paper object.
- */
-paperRouter.get('/:id', async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
-    try {
-        const id = parseInt(req.params.id, 10);
-        if (isNaN(id)) {
-            return res.status(400).json({ error: 'Invalid paper ID.' });
-        }
-
-        const paper = await paperService.getPaperById(id);
-        if (!paper) {
-            return res.status(404).json({ error: 'Paper not found.' });
-        }
-
-        res.status(200).json(paper);
-    } catch (error) {
-        next(error);
-    }
-});
-
-/**
- * @swagger
- * /papers:
+ * /article-likes/add:
  *   post:
  *     security:
- *       - bearerAuth: []
- *     summary: Create a new paper
+ *       - bearerAuth: []  # Requires user authentication
+ *     summary: Add a like to an article
+ *     description: Adds a new like to an article for the currently logged-in user.
  *     requestBody:
  *       required: true
  *       content:
@@ -72,22 +19,43 @@ paperRouter.get('/:id', async (req: Request<{ id: string }>, res: Response, next
  *           schema:
  *             type: object
  *             properties:
- *               date:
- *                 type: string
- *                 format: date-time
- *               namePaper:
- *                 type: string
- *               namePublisher:
- *                 type: string
+ *               articleId:
+ *                 type: integer
+ *                 example: 42
  *     responses:
  *       201:
- *         description: Paper successfully created.
+ *         description: Like successfully added.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 user:
+ *                   type: object
+ *                 article:
+ *                   type: object
+ *                 date:
+ *                   type: string
+ *                   format: date-time
+ *       400:
+ *         description: Bad request. Missing or invalid parameters.
+ *       401:
+ *         description: Unauthorized. User not logged in.
  */
-paperRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
+articleLikesRouter.post('/add', ensureAuthenticated, async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { date, namePaper, namePublisher } = req.body;
-        const newPaper = await paperService.createPaper({ date: new Date(date), namePaper, namePublisher });
-        res.status(201).json(newPaper);
+        const { articleId } = req.body;
+
+        if (!articleId) {
+            return res.status(400).json({ error: 'Missing articleId.' });
+        }
+
+        const userId = req.user.id; // Get the authenticated user's ID from `req.user`
+
+        const newLike = await articleLikesService.addLike(userId, articleId);
+        res.status(201).json(newLike);
     } catch (error) {
         next(error);
     }
@@ -95,17 +63,12 @@ paperRouter.post('/', async (req: Request, res: Response, next: NextFunction) =>
 
 /**
  * @swagger
- * /papers/{id}:
- *   put:
+ * /article-likes/delete:
+ *   delete:
  *     security:
- *       - bearerAuth: []
- *     summary: Update an existing paper
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
+ *       - bearerAuth: []  # Requires user authentication
+ *     summary: Delete a like from an article
+ *     description: Removes an existing like for an article by the currently logged-in user.
  *     requestBody:
  *       required: true
  *       content:
@@ -113,58 +76,40 @@ paperRouter.post('/', async (req: Request, res: Response, next: NextFunction) =>
  *           schema:
  *             type: object
  *             properties:
- *               namePaper:
- *                 type: string
- *               namePublisher:
- *                 type: string
+ *               articleId:
+ *                 type: integer
+ *                 example: 42
  *     responses:
  *       200:
- *         description: Paper successfully updated.
+ *         description: Like successfully removed.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Like removed successfully."
+ *       400:
+ *         description: Bad request. Missing or invalid parameters.
+ *       401:
+ *         description: Unauthorized. User not logged in.
  */
-paperRouter.put('/:id', async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+articleLikesRouter.delete('/delete', ensureAuthenticated, async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const id = parseInt(req.params.id, 10);
-        if (isNaN(id)) {
-            return res.status(400).json({ error: 'Invalid paper ID.' });
+        const { articleId } = req.body;
+
+        if (!articleId) {
+            return res.status(400).json({ error: 'Missing articleId.' });
         }
 
-        const updates = req.body;
-        const updatedPaper = await paperService.updatePaper(id, updates);
-        res.status(200).json(updatedPaper);
+        const userId = req.user.id; // Get the authenticated user's ID from `req.user`
+
+        await articleLikesService.deleteLike(userId, articleId);
+        res.status(200).json({ message: 'Like removed successfully.' });
     } catch (error) {
         next(error);
     }
 });
 
-/**
- * @swagger
- * /papers/{id}:
- *   delete:
- *     security:
- *       - bearerAuth: []
- *     summary: Delete a paper by ID
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Paper successfully deleted.
- */
-paperRouter.delete('/:id', async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
-    try {
-        const id = parseInt(req.params.id, 10);
-        if (isNaN(id)) {
-            return res.status(400).json({ error: 'Invalid paper ID.' });
-        }
-
-        await paperService.deletePaper(id);
-        res.status(200).json({ message: 'Paper successfully deleted.' });
-    } catch (error) {
-        next(error);
-    }
-});
-
-export { paperRouter };
+export { articleLikesRouter };
