@@ -74,8 +74,10 @@
  *          enum: [student, lecturer, admin, guest]
  */
 import express, { NextFunction, Request, Response } from 'express';
+import { Request as JwtRequest } from 'express-jwt';
 import userService from '../service/user.service';
 import { UserInput } from '../types/index';
+import { UnauthorizedError } from 'express-jwt';
 
 const userRouter = express.Router();
 
@@ -257,12 +259,19 @@ userRouter.put(
  *       400:
  *         description: Bad request or validation error.
  */
-userRouter.delete('/:id', async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+
+userRouter.delete('/:id', async (req: Request , res: Response, next: NextFunction) => {
     try {
         const userId = parseInt(req.params.id, 10);
-
-        await userService.deleteUser(userId);
-        res.sendStatus(204);
+        const psdRequest = <JwtRequest>req
+        if(!psdRequest.auth){
+            throw new UnauthorizedError("credentials_required", {message: "TEST"})
+        }
+        else{
+            const { role } = psdRequest.auth;
+            await userService.deleteUser(userId, role);
+            res.sendStatus(204);
+        }
     } catch (error) {
         next(error);
     }

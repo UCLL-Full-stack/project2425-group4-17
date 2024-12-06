@@ -67,10 +67,15 @@ const authenticate = async ({ username, password }: UserInput): Promise<Authenti
         token: generateJWTToken({ username, role: user.getRole() }),
         username,
         fullname: `${user.getFirstName()} ${user.getLastName()}`,
+        role: user.getRole()
     };
 };
 
-const deleteUser = async (id: number): Promise<void> => {
+const deleteUser = async (id: number, role: string): Promise<void> => {
+    if (role !== 'admin') {
+        throw new Error('UnauthorizedError: Only admins can delete users');
+    }
+
     try {
         await userDB.deleteUser(id);
     } catch (error) {
@@ -78,5 +83,6 @@ const deleteUser = async (id: number): Promise<void> => {
         throw new Error('Error deleting user from the database.');
     }
 };
+
 
 export default { getAllUsers, getUserByUsername, createUser, updateUser, authenticate, deleteUser };

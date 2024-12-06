@@ -12,6 +12,7 @@ type AuthenticationResponse = {
     token: string;
     username: string;
     fullname: string;
+    role: string;
 };
 
 type PaperInput = {

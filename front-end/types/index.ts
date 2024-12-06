@@ -3,6 +3,16 @@ import { Paper } from '../..//back-end/model/paper';
 import { Review } from '../..//back-end/model/review';
 import { ArticleLikes } from '../..//back-end/model/articlelikes';
 
+export type UserInput = {
+    firstName?: string;
+    lastName?: string;
+    fullname?: string;
+    email?: string;
+    username?: string;
+    password?: string;
+    role?: string;
+};
+
 export type Article = {
     id?: number;
     title: string;

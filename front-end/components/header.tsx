@@ -5,14 +5,14 @@ const Header: React.FC = () => {
   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
 
   useEffect(() => {
-    const user = sessionStorage.getItem('loggedInUser');
+    const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
     if (user) {
-      setLoggedInUser(user);
+      setLoggedInUser(user.fullname || user.username);
     }
   }, []);
 
   const handleLogout = () => {
-    sessionStorage.removeItem('loggedInUser');
+    localStorage.removeItem('loggedInUser');
     setLoggedInUser(null);
   };
 
