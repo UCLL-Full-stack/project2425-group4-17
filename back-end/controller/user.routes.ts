@@ -265,7 +265,7 @@ userRouter.delete('/:id', async (req: Request , res: Response, next: NextFunctio
         const userId = parseInt(req.params.id, 10);
         const psdRequest = <JwtRequest>req
         if(!psdRequest.auth){
-            throw new UnauthorizedError("credentials_required", {message: "TEST"})
+            throw new UnauthorizedError("credentials_required", {message: "Missing credentials"});
         }
         else{
             const { role } = psdRequest.auth;

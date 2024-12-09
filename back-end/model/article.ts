@@ -81,6 +81,21 @@ export class Article {
         }
     }
 
+    static from(articlePrisma: any): Article {
+        return new Article({
+            id: articlePrisma.id,
+            title: articlePrisma.title,
+            summary: articlePrisma.summary,
+            picture: articlePrisma.picture,
+            publishedAt: new Date(articlePrisma.publishedAt),
+            articleType: articlePrisma.articleType,
+            user: User.from(articlePrisma.user),
+            paper: Paper.from(articlePrisma.paper),
+            reviews: articlePrisma.reviews.map((review: any) => Review.from(review)),
+            articleLikes: articlePrisma.articleLikes.map((like: any) => ArticleLikes.from(like)),
+        });
+    }
+
     equals(article: Article): boolean {
         return this.id === article.getId() &&
          this.title === article.getTitle() &&

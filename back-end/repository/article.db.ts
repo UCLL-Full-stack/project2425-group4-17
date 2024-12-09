@@ -1,213 +1,130 @@
-import { Article } from "../model/article";
-import { ArticleLikes } from "../model/articlelikes";
-import { Paper } from "../model/paper";
-import { Review } from "../model/review";
-import { User } from "../model/user";
+import { Article } from '../model/article';
+import database from '../util/database';
 
-const getRandomPastDate = () => {
-    const end = new Date();
-    const start = new Date();
-    start.setFullYear(end.getFullYear() - 1);
-    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+const getAllArticles = async (): Promise<Article[]> => {
+    try {
+        const articlesPrisma = await database.article.findMany({
+            include: {
+                user: true,
+                paper: true,
+                reviews: true,
+                articleLikes: true,
+            },
+        });
+        return articlesPrisma.map((articlePrisma) => Article.from(articlePrisma));
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
 };
 
-
-
-const user = new User({
-    id: 1,
-    firstName: "John",
-    lastName: "Doe",
-    email: "johndoe@example.com",
-    username: "johnny",
-    password: "securepassword",
-    role: "author",
-    reviews: [],
-    articles: [],
-    articleLikes: []
-});
-
-const paper = new Paper({
-    id: 1,
-    date: new Date(),
-    namePaper: "Science Today",
-    namePublisher: "Knowledge Publishers",
-    articles: []
-});
-
-const article1 = new Article({
-    id: 1,
-    title: "Understanding TypeScript",
-    summary: "An in-depth article about TypeScript and its features.",
-    picture: "https://example.com/image.jpg",
-    publishedAt: getRandomPastDate(),
-    articleType: "Educational",
-    user: user,
-    paper: paper,
-    reviews: [],
-    articleLikes: []
-});
-
-const article2 = new Article({
-    id: 2,
-    title: "The Future of JavaScript",
-    summary: "Exploring the latest trends in JavaScript development.",
-    picture: "https://example.com/image2.jpg",
-    publishedAt: getRandomPastDate(),
-    articleType: "Tech",
-    user: user,
-    paper: paper,
-    reviews: [],
-    articleLikes: []
-});
-
-const article3 = new Article({
-    id: 3,
-    title: "Introduction to React",
-    summary: "A beginner's guide to building user interfaces with React.",
-    picture: "https://example.com/image3.jpg",
-    publishedAt: getRandomPastDate(),
-    articleType: "Educational",
-    user: user,
-    paper: paper,
-    reviews: [],
-    articleLikes: []
-});
-
-const article4 = new Article({
-    id: 4,
-    title: "Node.js: A Comprehensive Overview",
-    summary: "Understanding the basics and advanced features of Node.js.",
-    picture: "https://example.com/image4.jpg",
-    publishedAt: getRandomPastDate(),
-    articleType: "Educational",
-    user: user,
-    paper: paper,
-    reviews: [],
-    articleLikes: []
-});
-
-const article5 = new Article({
-    id: 5,
-    title: "Exploring Machine Learning",
-    summary: "An introduction to the concepts and applications of machine learning.",
-    picture: "https://example.com/image5.jpg",
-    publishedAt: getRandomPastDate(),
-    articleType: "Tech",
-    user: user,
-    paper: paper,
-    reviews: [],
-    articleLikes: []
-});
-
-paper.getArticles().push(article1, article2, article3, article4, article5);
-
-const review1 = new Review({
-    id: 1,
-    title: "Insightful",
-    content: "This article provides a deep understanding of TypeScript.",
-    rating: 5,
-    user: user,
-    article: article1 
-});
-
-const review2 = new Review({
-    id: 2,
-    title: "Well-written",
-    content: "Clear and concise.",
-    rating: 4,
-    user: new User({
-        id: 2,
-        firstName: "Jane",
-        lastName: "Smith",
-        email: "janesmith@example.com",
-        username: "janey",
-        password: "anotherpassword",
-        role: "reviewer",
-        reviews: [],
-        articles: [],
-        articleLikes: []
-    }),
-    article: article1
-});
-
-const articleLike1 = new ArticleLikes({
-    id: 1,
-    user: user,
-    article: article1,
-    date: new Date()
-});
-
-article1.getArticleLikes().push(articleLike1);
-
-const articles = [
-    article1,
-    article2,
-    article3,
-    article4,
-    article5,
-];
-
-
-
-const addArticle = (articleData: Article): Article => {
-    const newId = articles.length + 1;
-    
-
-    const newArticle = new Article({
-        id: newId,
-        title: articleData.getTitle() ?? "Untitled Article",
-        summary: articleData.getSummary(),
-        picture: articleData.getPicture(),
-        publishedAt: new Date(),
-        articleType: articleData.getArticleType(),
-        user: articleData.getUser(),
-        paper: articleData.getPaper(),
-        reviews:  [],
-        articleLikes:  [],
-    });
-
-    articles.push(newArticle);
-
-    return newArticle;
+const getArticlesByDate = async (date: Date): Promise<Article[]> => {
+    try {
+        const articlesPrisma = await database.article.findMany({
+            where: {
+                publishedAt: date,
+            },
+            include: {
+                user: true,
+                paper: true,
+                reviews: true,
+                articleLikes: true,
+            },
+        });
+        return articlesPrisma.map((articlePrisma) => Article.from(articlePrisma));
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
 };
 
-
-
-
-const getAllArticles = (): Article[] => articles;
-
-const getArticlesByDate = ({ date }: { date: Date }): Article[] => { 
-    return articles.filter((article) => article.getPublishedAt() === date);
+const getArticleById = async (id: number): Promise<Article | null> => {
+    try {
+        const articlePrisma = await database.article.findUnique({
+            where: { id },
+            include: {
+                user: true,
+                paper: true,
+                reviews: true,
+                articleLikes: true,
+            },
+        });
+        return articlePrisma ? Article.from(articlePrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Error retrieving article from the database.');
+    }
 };
 
-const editArticle = (id: number, updatedData: Article): Article | null => {
-    const index = articles.findIndex((article) => article.getId() === id);
-    if (index === -1) return null;
-    const existingArticle = articles[index];
-   
-    const updatedArticle = new Article({
-        id: existingArticle.getId(), 
-        title: updatedData.getTitle(),
-        summary: updatedData.getSummary(),
-        picture: updatedData.getPicture(),
-        publishedAt: updatedData.getPublishedAt(),
-        articleType: updatedData.getArticleType(),
-        user: updatedData.getUser(),
-        paper: updatedData.getPaper(),
-        reviews: updatedData.getReviews(),
-        articleLikes: updatedData.getArticleLikes(),
-    });
+const addArticle = async (article: Article): Promise<Article> => {
+    try {
+        const userId = article.getUser().getId();
+        const paperId = article.getPaper().getId();
 
+        if (userId === undefined || paperId === undefined) {
+            throw new Error('User ID and Paper ID are required');
+        }
 
-    articles[index] = updatedArticle;
-
-    return updatedArticle;
+        const articlePrisma = await database.article.create({
+            data: {
+                title: article.getTitle(),
+                summary: article.getSummary(),
+                picture: article.getPicture(),
+                publishedAt: article.getPublishedAt(),
+                articleType: article.getArticleType(),
+                userId: userId,
+                paperId: paperId,
+            },
+            include: {
+                user: true,
+                paper: true,
+                reviews: true,
+                articleLikes: true,
+            },
+        });
+        return Article.from(articlePrisma);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Error saving article to the database.');
+    }
 };
 
+const editArticle = async (id: number, updates: Partial<{ title: string; summary: string; picture: string, articleType: string }>): Promise<Article> => {
+    try {
+        const articlePrisma = await database.article.update({
+            where: { id },
+            data: updates,
+            include: {
+                user: true, 
+                paper: true,
+                reviews: true,
+                articleLikes: true,
+            },
+        });
+
+        return Article.from(articlePrisma);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Error updating article in the database.');
+    }
+};
+
+const deleteArticle = async (id: number): Promise<void> => {
+    try {
+        await database.article.delete({
+            where: { id },
+        });
+    } catch (error) {
+        console.error(error);
+        throw new Error('Error deleting article from the database.');
+    }
+};
 
 export default {
     getAllArticles,
     getArticlesByDate,
+    getArticleById,
     addArticle,
     editArticle,
+    deleteArticle,
 };

@@ -1,11 +1,12 @@
 import jwt from 'jsonwebtoken';
 
 type JWTTokenPayload = {
+    id?: number;
     username: string;
     role: string;
 };
 
-const generateJWTToken = ({ username, role }: JWTTokenPayload): string => {
+const generateJWTToken = ({ username, role, id }: JWTTokenPayload): string => {
     const secret = process.env.JWT_SECRET;
     const expiresIn = process.env.JWT_EXPIRES_HOURS ? `${process.env.JWT_EXPIRES_HOURS}h` : '8h';
 
@@ -19,7 +20,7 @@ const generateJWTToken = ({ username, role }: JWTTokenPayload): string => {
     };
 
     try {
-        return jwt.sign({ username, role }, secret, options);
+        return jwt.sign({ username, role, id }, secret, options);
     } catch (err) {
         console.error('Error generating token:', err);
         throw new Error('Error generating token');

@@ -27,6 +27,15 @@ const swaggerOpts = {
             title: 'Courses API',
             version: '1.0.0',
         },
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                },
+            },
+        },
     },
     apis: ['./controller/*.routes.ts'],
 };
@@ -45,7 +54,6 @@ app.use(
 app.use('/articles', articleRouter);
 app.use('/users', userRouter);
 app.use('/papers', paperRouter);
-
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     if (err.name === 'UnauthorizedError') {

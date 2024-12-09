@@ -1,3 +1,8 @@
+import { User } from '../model/user';
+import { Paper } from '../model/paper';
+import { Review } from '../model/review';
+import { ArticleLikes } from '../model/articlelikes';
+
 type UserInput = {
     id?: number;
     username?: string;
@@ -8,6 +13,25 @@ type UserInput = {
     password?: string;
 };
 
+type ArticleInput = {
+    id?: number;
+    title: string;
+    summary: string;
+    picture: string;
+    publishedAt: Date;
+    articleType: string;
+    user: User;
+    paper: Paper;
+    reviews: Review[];
+    articleLikes: ArticleLikes[];
+};
+
+type PaperInput = {
+    date: Date;
+    namePaper: string;
+    namePublisher: string;
+};
+  
 type AuthenticationResponse = {
     token: string;
     username: string;
@@ -15,15 +39,9 @@ type AuthenticationResponse = {
     role: string;
 };
 
-type PaperInput = {
-    date: Date;
-    namePaper: string;
-    namePublisher: string;
-  };
-  
-
 export {
     UserInput,
-    AuthenticationResponse,
+    ArticleInput,
     PaperInput,
+    AuthenticationResponse,
 };

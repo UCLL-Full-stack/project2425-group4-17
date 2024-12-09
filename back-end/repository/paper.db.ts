@@ -24,6 +24,19 @@ const getPaperById = async (id: number): Promise<Paper | null> => {
     }
 };
 
+const getPaperByLatestId = async (): Promise<Paper | null> => {
+    try {
+        const paperPrisma = await database.paper.findFirst({
+            orderBy: { id: 'desc' },
+            include: { articles: true },
+        });
+        return paperPrisma ? Paper.from(paperPrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Error retrieving the latest paper from database.');
+    }
+};
+
 const createPaper = async (paper: Paper): Promise<Paper> => {
     try {
         const paperPrisma = await database.paper.create({
@@ -70,4 +83,5 @@ export default {
     createPaper,
     updatePaper,
     deletePaper,
+    getPaperByLatestId,
 };

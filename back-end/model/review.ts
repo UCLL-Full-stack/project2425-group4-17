@@ -52,6 +52,19 @@ export class Review {
         }
     }
 
+    static from(prismaReview: any): Review {
+        const user = User.from(prismaReview.user);
+        const article = Article.from(prismaReview.article);
+        return new Review({
+            id: prismaReview.id,
+            title: prismaReview.title,
+            content: prismaReview.content,
+            rating: prismaReview.rating,
+            user,
+            article,
+        });
+    }
+
     equals(review: Review): boolean {
         return (
             this.id === review.getId() &&
