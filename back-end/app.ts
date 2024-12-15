@@ -9,6 +9,7 @@ import { articleRouter } from '../back-end/controller/article.routes';
 import { userRouter } from './controller/user.routes';
 import { paperRouter } from './controller/paper.routes';
 import { reviewRouter } from './controller/review.routes';
+import { articleLikesRouter } from './controller/articlelikes.routes';
 
 const app = express();
 dotenv.config();
@@ -56,6 +57,7 @@ app.use('/articles', articleRouter);
 app.use('/users', userRouter);
 app.use('/papers', paperRouter);
 app.use('/reviews', reviewRouter);
+app.use('/articlelikes', articleLikesRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     if (err.name === 'UnauthorizedError') {

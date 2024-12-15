@@ -38,6 +38,11 @@ type ReviewInput = {
     rating?: number;
     articleId: number;
 };
+
+type CreateArticleLikeInput = {
+    userId: number;
+    articleId: number;
+};
   
 type AuthenticationResponse = {
     token: string;
@@ -52,4 +57,5 @@ export {
     PaperInput,
     ReviewInput,
     AuthenticationResponse,
+    CreateArticleLikeInput
 };

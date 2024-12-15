@@ -136,8 +136,7 @@ export class Article {
             articleLikes: this.articleLikes.map(like => ({
                 id: like.getId(),
                 user: {
-                    id: like.getUser().getId(),
-                    username: like.getUser().getUsername(),
+                    id: like.getUser(),
                 },
                 date: like.getDate(),
             })),

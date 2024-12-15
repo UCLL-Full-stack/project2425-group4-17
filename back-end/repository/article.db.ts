@@ -13,7 +13,12 @@ const getAllArticles = async (): Promise<Article[]> => {
                         article: true,
                     },
                 },
-                articleLikes: true,
+                articleLikes: {
+                    include: {
+                        user: true,
+                        article: true,
+                    },
+                }
             },
         });
         return articlesPrisma.map((articlePrisma) => Article.from(articlePrisma));
@@ -56,7 +61,12 @@ const getArticleById = async (id: number): Promise<Article | null> => {
                         article: true,
                     },
                 },
-                articleLikes: true,
+                articleLikes: {
+                    include: {
+                        user: true,
+                        article: true,
+                    },
+                }
             },
         });
         return articlePrisma ? Article.from(articlePrisma) : null;
@@ -113,7 +123,12 @@ const editArticle = async (id: number, updates: Partial<{ title: string; summary
                         article: true,
                     },
                 },
-                articleLikes: true,
+                articleLikes: {
+                    include: {
+                        user: true,
+                        article: true,
+                    },
+                }
             },
         });
 
@@ -158,7 +173,12 @@ const getArticlesOfToday = async (): Promise<Article[]> => {
                         article: true,
                     },
                 },
-                articleLikes: true,
+                articleLikes: {
+                    include: {
+                        user: true,
+                        article: true,
+                    },
+                }
             },
         });
         return articlesPrisma.map((articlePrisma) => Article.from(articlePrisma));
