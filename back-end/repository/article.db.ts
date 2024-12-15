@@ -7,7 +7,12 @@ const getAllArticles = async (): Promise<Article[]> => {
             include: {
                 user: true,
                 paper: true,
-                reviews: true,
+                reviews: {
+                    include: {
+                        user: true,
+                        article: true,
+                    },
+                },
                 articleLikes: true,
             },
         });
@@ -45,7 +50,12 @@ const getArticleById = async (id: number): Promise<Article | null> => {
             include: {
                 user: true,
                 paper: true,
-                reviews: true,
+                reviews: {
+                    include: {
+                        user: true,
+                        article: true,
+                    },
+                },
                 articleLikes: true,
             },
         });
@@ -59,7 +69,7 @@ const getArticleById = async (id: number): Promise<Article | null> => {
 const addArticle = async (article: Article): Promise<Article> => {
     try {
         const userId = article.getUser().getId();
-        const paperId = article.getPaper().getId();
+        const paperId = article.getPaperId();
 
         if (userId === undefined || paperId === undefined) {
             throw new Error('User ID and Paper ID are required');
@@ -89,15 +99,20 @@ const addArticle = async (article: Article): Promise<Article> => {
     }
 };
 
-const editArticle = async (id: number, updates: Partial<{ title: string; summary: string; picture: string, articleType: string }>): Promise<Article> => {
+const editArticle = async (id: number, updates: Partial<{ title: string; summary: string; picture: string; articleType: string }>): Promise<Article> => {
     try {
         const articlePrisma = await database.article.update({
             where: { id },
             data: updates,
             include: {
-                user: true, 
+                user: true,
                 paper: true,
-                reviews: true,
+                reviews: {
+                    include: {
+                        user: true,
+                        article: true,
+                    },
+                },
                 articleLikes: true,
             },
         });
@@ -120,6 +135,39 @@ const deleteArticle = async (id: number): Promise<void> => {
     }
 };
 
+const getArticlesOfToday = async (): Promise<Article[]> => {
+    try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+
+        const articlesPrisma = await database.article.findMany({
+            where: {
+                publishedAt: {
+                    gte: today,
+                    lt: tomorrow,
+                },
+            },
+            include: {
+                user: true,
+                paper: true,
+                reviews: {
+                    include: {
+                        user: true,
+                        article: true,
+                    },
+                },
+                articleLikes: true,
+            },
+        });
+        return articlesPrisma.map((articlePrisma) => Article.from(articlePrisma));
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
 export default {
     getAllArticles,
     getArticlesByDate,
@@ -127,4 +175,5 @@ export default {
     addArticle,
     editArticle,
     deleteArticle,
+    getArticlesOfToday,
 };

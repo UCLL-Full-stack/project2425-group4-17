@@ -31,7 +31,7 @@ const createArticle = async (articleData: ArticleInput, userId: number): Promise
         publishedAt: today,
         articleType: articleData.articleType,
         user: user,
-        paper: paper,
+        paperId: paper.getId(),
         reviews: [],
         articleLikes: [],
     });
@@ -65,10 +65,15 @@ const deleteArticle = async (id: number, userId: number, userRole: string): Prom
     await articleDB.deleteArticle(id);
 };
 
+const getArticlesOfToday = async (): Promise<Article[]> => {
+    return await articleDB.getArticlesOfToday();
+};
+
 export default {
     getAllArticles,
     getArticlesByDate,
     createArticle,
     editArticle,
     deleteArticle,
+    getArticlesOfToday,
 };

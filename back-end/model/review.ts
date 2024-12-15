@@ -1,22 +1,25 @@
 import { User } from './user';
 import { Article } from './article';
+import { Review as ReviewPrisma } from '@prisma/client';
+import { User as UserPrisma } from '@prisma/client';
+import { Article as ArticlePrisma } from '@prisma/client';
 
 export class Review {
     private id?: number;
     private title: string;
     private content: string;
     private rating?: number;
-    private user: User;
-    private article: Article;
+    private userId: number;
+    private articleId: number;
 
-    constructor(review: { id?: number; title: string; content: string; rating?: number; user: User; article: Article }) {
+    constructor(review: { id?: number; title: string; content: string; rating?: number; userId: number; articleId: number }) {
         this.validate(review);
         this.id = review.id;
         this.title = review.title;
         this.content = review.content;
         this.rating = review.rating;
-        this.user = review.user;
-        this.article = review.article;
+        this.userId = review.userId;
+        this.articleId = review.articleId;
     }
 
     getId(): number | undefined {
@@ -35,12 +38,12 @@ export class Review {
         return this.rating;
     }
 
-    getUser(): User {
-        return this.user;
+    getUserid(): number {
+        return this.userId;
     }
 
-    getArticle(): Article {
-        return this.article;
+    getArticleId(): number {
+        return this.articleId;
     }
 
     validate(review: { title: string; content: string; rating?: number }) {
@@ -52,16 +55,22 @@ export class Review {
         }
     }
 
-    static from(prismaReview: any): Review {
-        const user = User.from(prismaReview.user);
-        const article = Article.from(prismaReview.article);
+    
+    static from({
+        id,
+        title,
+        content,
+        rating,
+        user,
+        article,
+    }: ReviewPrisma & {user: UserPrisma, article: ArticlePrisma}): Review {
         return new Review({
-            id: prismaReview.id,
-            title: prismaReview.title,
-            content: prismaReview.content,
-            rating: prismaReview.rating,
-            user,
-            article,
+            id,
+            title,
+            content,
+            rating,
+            userId: user.id,
+            articleId: article.id,
         });
     }
 
@@ -71,8 +80,8 @@ export class Review {
             this.title === review.getTitle() &&
             this.content === review.getContent() &&
             this.rating === review.getRating() &&
-            this.user.equals(review.getUser()) &&
-            this.article.equals(review.getArticle())
+            this.userId === review.getUserid() &&
+            this.articleId === review.getArticleId()
         );
     }
 }

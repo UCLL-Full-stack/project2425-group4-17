@@ -31,6 +31,13 @@ type PaperInput = {
     namePaper: string;
     namePublisher: string;
 };
+
+type ReviewInput = {
+    title: string;
+    content: string;
+    rating?: number;
+    articleId: number;
+};
   
 type AuthenticationResponse = {
     token: string;
@@ -43,5 +50,6 @@ export {
     UserInput,
     ArticleInput,
     PaperInput,
+    ReviewInput,
     AuthenticationResponse,
 };

@@ -252,4 +252,30 @@ articleRouter.delete('/:id', async (req: Request, res: Response, next: NextFunct
     }
 });
 
+/**
+ * @swagger
+ * /articles/today:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Get a list of articles published today
+ *     responses:
+ *       200:
+ *         description: A list of articles.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                  $ref: '#/components/schemas/Article'
+ */
+articleRouter.get('/today', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const articles = await articleService.getArticlesOfToday();
+        res.status(200).json(articles);
+    } catch (error) {
+        next(error);
+    }
+});
+
 export { articleRouter };
