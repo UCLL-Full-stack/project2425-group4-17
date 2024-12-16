@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 const Header: React.FC = () => {
   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
@@ -14,6 +16,7 @@ const Header: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem('loggedInUser');
     setLoggedInUser(null);
+    router.push('/login');
   };
 
   return (
@@ -22,14 +25,17 @@ const Header: React.FC = () => {
         The Voyager
       </a>
       <nav className="nav justify-content-center">
-        <Link href="/" className="nav-link px-4 fs-5 text-white">
-          Home
-        </Link>
-        <Link href="/articles" className="nav-link px-4 fs-5 text-white">
-          Articles
-        </Link>
         {loggedInUser ? (
           <>
+            <Link href="/" className="nav-link px-4 fs-5 text-white">
+              Home
+            </Link>
+            <Link href="/articles" className="nav-link px-4 fs-5 text-white">
+              Articles
+            </Link>
+            <Link href="/articles/createArticle" className="nav-link px-4 fs-5 text-white">
+              Create Article
+            </Link>
             <button
               onClick={handleLogout}
               className="nav-link px-4 fs-5 text-white bg-transparent border-0"

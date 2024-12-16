@@ -1,67 +1,70 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Article } from '@types';
 
-type Props = {
-    articles: Array<Article>;
-    onSelectArticle: (article: Article) => void;
-    selectedArticle: Article | null;
-};
+const ArticlesOverviewTable: React.FC = () => {
+    const [articles, setArticles] = useState<Article[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-const ArticlesOverviewTable: React.FC<Props> = ({ articles, onSelectArticle, selectedArticle }: Props) => {
-    const [sortColumn, setSortColumn] = useState<string | null>(null);
-    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+    useEffect(() => {
+        const fetchArticles = async () => {
+            const token = localStorage.getItem('loggedInUser') ? JSON.parse(localStorage.getItem('loggedInUser') || '{}').token : null;
+            if (!token) {
+                setError('No token found. Please log in.');
+                setLoading(false);
+                return;
+            }
 
-    const handleSort = (column: string) => {
-        const direction = (sortColumn === column && sortDirection === 'asc') ? 'desc' : 'asc';
-        setSortColumn(column);
-        setSortDirection(direction);
-    };
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/articles`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                setArticles(data);
+            } catch (err) {
+                setError('Failed to fetch articles.');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchArticles();
+    }, []);
 
-    const sortedArticles = [...articles].sort((a, b) => {
-        let comparison = 0;
-        if (sortColumn === 'title') {
-            comparison = a.title.localeCompare(b.title);
-        } else if (sortColumn === 'publishedAt') {
-            comparison = new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(); 
-        } else if (sortColumn === 'articleType') {
-            comparison = a.articleType.localeCompare(b.articleType);
-        }
-        return sortDirection === 'asc' ? comparison : -comparison;
-    });
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>{error}</p>;
 
     return (
-        <table className="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col" onClick={() => handleSort('title')} role="button">Title</th>
-                    <th scope="col" onClick={() => handleSort('publishedAt')} role="button">Published Date</th>
-                    <th scope="col" onClick={() => handleSort('articleType')} role="button">Type</th>
-                </tr>
-            </thead>
-            <tbody>
-                {sortedArticles.map((article, index) => (
-                    <React.Fragment key={index}>
-                        <tr onClick={() => onSelectArticle(article)} role="button">
-                            <td>{article.title}</td>
-                            <td>{new Date(article.publishedAt).toLocaleDateString()}</td>
-                            <td>{article.articleType}</td>
+        <div>
+            <h1>All Articles</h1>
+            {articles.length === 0 ? (
+                <p>No articles found.</p>
+            ) : (
+                <table className="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Title</th>
+                            <th scope="col">Published Date</th>
+                            <th scope="col">Type</th>
                         </tr>
-                        {selectedArticle && selectedArticle.id === article.id && ( 
-                            <tr>
-                                <td colSpan={3} style={{ paddingLeft: '20px', paddingTop: '10px' }}>
-                                    <div>
-                                        <h3>{article.title}</h3>
-                                        <p>{article.summary}</p>
-                                        <p><strong>Published Date:</strong> {new Date(article.publishedAt).toLocaleDateString()}</p>
-                                        <p><strong>Type:</strong> {article.articleType}</p>
-                                    </div>
-                                </td>
+                    </thead>
+                    <tbody>
+                        {articles.map((article) => (
+                            <tr key={article.id}>
+                                <td>{article.title}</td>
+                                <td>{new Date(article.publishedAt).toLocaleDateString()}</td>
+                                <td>{article.articleType}</td>
                             </tr>
-                        )}
-                    </React.Fragment>
-                ))}
-            </tbody>
-        </table>
+                        ))}
+                    </tbody>
+                </table>
+            )}
+        </div>
     );
 };
 

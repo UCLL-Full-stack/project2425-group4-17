@@ -1,8 +1,20 @@
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Header from '@components/header';
 import styles from '@styles/home.module.css';
+import ArticlesOverviewTableByToday from '@components/articles/ArticlesOverviewTableByToday';
 
 const Home: React.FC = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+    if (!user || !user.token) {
+      router.push('/login');
+    }
+  }, [router]);
+
   return (
     <>
       <Head>
@@ -15,12 +27,7 @@ const Home: React.FC = () => {
         <span>
           <h1>Welcome!</h1>
         </span>
-
-        <div className={styles.description}>
-          <p>
-            Info about The Voyager.
-          </p>
-        </div>
+        <ArticlesOverviewTableByToday />
       </main>
     </>
   );
