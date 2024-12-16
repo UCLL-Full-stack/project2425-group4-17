@@ -3,17 +3,20 @@ import { useEffect, useState } from 'react';
 
 const Header: React.FC = () => {
   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);  // Track user role
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
     if (user) {
       setLoggedInUser(user.fullname || user.username);
+      setUserRole(user.role);  // Set role after login
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('loggedInUser');
     setLoggedInUser(null);
+    setUserRole(null);  // Reset role on logout
   };
 
   return (
@@ -30,6 +33,17 @@ const Header: React.FC = () => {
         </Link>
         {loggedInUser ? (
           <>
+            <Link href="/profile" className="nav-link px-4 fs-5 text-white">
+              Profile
+            </Link>
+            <Link href="/papers" className="nav-link px-4 fs-5 text-white">
+              Papers
+            </Link>            
+            {userRole === 'admin' && (
+              <Link href="/users" className="nav-link px-4 fs-5 text-white">
+                Users
+              </Link>
+            )}
             <button
               onClick={handleLogout}
               className="nav-link px-4 fs-5 text-white bg-transparent border-0"
