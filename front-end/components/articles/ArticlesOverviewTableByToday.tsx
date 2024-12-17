@@ -46,7 +46,7 @@ const ArticlesOverviewTableByToday: React.FC = () => {
                     <tbody>
                         {articles.map((article) => (
                             <React.Fragment key={article.id}>
-                                <tr onClick={() => toggleArticleDetails(article.id)} style={{ cursor: 'pointer' }}>
+                                <tr onClick={() => article.id !== undefined && toggleArticleDetails(article.id)} style={{ cursor: 'pointer' }}>
                                     <td>{article.title}</td>
                                     <td>{article.articleType}</td>
                                     <td>{article.articleLikes.length}</td>
