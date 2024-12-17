@@ -26,7 +26,15 @@ export type Article = {
     articleLikes: ArticleLikes[];
 };
 
+export type  PaperInput = {
+  id: number;
+  date: string;
+  namePaper: string;
+  namePublisher: string;
+};
+
 export type StatusMessage = {
     message: string;
     type: "error" | "success";
 };
+

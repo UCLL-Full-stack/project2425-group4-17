@@ -1,18 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Header from "@components/header";
-
-interface User {
-  id: number;
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-}
+import { UserInput } from "@types";
 
 const ProfilePage: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserInput | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {

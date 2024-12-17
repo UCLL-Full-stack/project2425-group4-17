@@ -33,9 +33,6 @@ const Header: React.FC = () => {
         </Link>
         {loggedInUser ? (
           <>
-            <Link href="/profile" className="nav-link px-4 fs-5 text-white">
-              Profile
-            </Link>
             <Link href="/papers" className="nav-link px-4 fs-5 text-white">
               Papers
             </Link>            
@@ -44,6 +41,9 @@ const Header: React.FC = () => {
                 Users
               </Link>
             )}
+            <Link href="/profile" className="nav-link px-4 fs-5 text-white">
+              Profile
+            </Link>
             <button
               onClick={handleLogout}
               className="nav-link px-4 fs-5 text-white bg-transparent border-0"

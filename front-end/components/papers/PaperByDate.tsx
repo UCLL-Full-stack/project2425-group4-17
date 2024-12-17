@@ -1,15 +1,9 @@
 // ArticlesToday.tsx
 import React, { useEffect, useState } from 'react';
-
-interface Paper {
-  id: number;
-  date: string;
-  namePaper: string;
-  namePublisher: string;
-}
+import { PaperInput } from '@types';
 
 const ArticlesToday: React.FC = () => {
-  const [articles, setArticles] = useState<Paper[]>([]);
+  const [articles, setArticles] = useState<PaperInput[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>(() => {
@@ -26,7 +20,7 @@ const ArticlesToday: React.FC = () => {
         }
 
         const data = await response.json();
-        const filteredArticles = data.filter((article: Paper) =>
+        const filteredArticles = data.filter((article: PaperInput) =>
           article.date.startsWith(selectedDate)
         );
 
