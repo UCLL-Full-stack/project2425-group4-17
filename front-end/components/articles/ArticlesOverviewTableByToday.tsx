@@ -2,25 +2,26 @@ import React, { useEffect, useState } from 'react';
 import { Article, ReviewInput } from '@types';
 import ArticleService from '@services/ArticleService';
 import ReviewService from '@services/ReviewService';
+import ArticleLikesService from '@services/ArticleLikesService';
 
 const ArticlesOverviewTableByToday: React.FC = () => {
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [expandedArticleId, setExpandedArticleId] = useState<number | null>(null);
-
-    // Review form states
     const [reviewTitle, setReviewTitle] = useState('');
     const [reviewContent, setReviewContent] = useState('');
     const [reviewRating, setReviewRating] = useState<number | null>(null);
     const [reviewError, setReviewError] = useState<string | null>(null);
     const [reviewLoading, setReviewLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         const fetchArticles = async () => {
             try {
                 const data = await ArticleService.getArticlesOfToday();
-                setArticles(data);
+                const sortedData = data.sort((a: Article, b: Article) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+                setArticles(sortedData);
             } catch (err) {
                 setError('Failed to fetch articles.');
             } finally {
@@ -75,9 +76,9 @@ const ArticlesOverviewTableByToday: React.FC = () => {
             setReviewTitle('');
             setReviewContent('');
             setReviewRating(null);
-            // Refresh the article list to show the new review
             const updatedArticles = await ArticleService.getArticlesOfToday();
-            setArticles(updatedArticles);
+            const sortedUpdatedArticles = updatedArticles.sort((a: Article, b: Article) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+            setArticles(sortedUpdatedArticles);
         } catch (err) {
             setReviewError('Failed to create review.');
         } finally {
@@ -85,13 +86,54 @@ const ArticlesOverviewTableByToday: React.FC = () => {
         }
     };
 
+    const handleLikeArticle = async (articleId: number) => {
+        const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+        if (!user || !user.token) {
+            alert('You must be logged in to like an article.');
+            return;
+        }
+
+        const article = articles.find(article => article.id === articleId);
+        if (!article) {
+            alert('Article not found.');
+            return;
+        }
+
+        if (article.user.id === user.id) {
+            alert('You cannot like your own article.');
+            return;
+        }
+
+        if (article.articleLikes.some(like => like.user.id === user.id)) {
+            alert('You have already liked this article.');
+            return;
+        }
+
+        try {
+            await ArticleLikesService.createArticleLike(articleId, user.token);
+            const updatedArticles = await ArticleService.getArticlesOfToday();
+            const sortedUpdatedArticles = updatedArticles.sort((a: Article, b: Article) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+            setArticles(sortedUpdatedArticles);
+        } catch (err) {
+            alert('Failed to like the article.');
+        }
+    };
+
+    const filteredArticles = articles.filter(article => article.title.toLowerCase().includes(searchQuery.toLowerCase()));
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
 
     return (
         <div>
             <h1>Today's Articles</h1>
-            {articles.length === 0 ? (
+            <input
+                type="text"
+                placeholder="Search by title"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {filteredArticles.length === 0 ? (
                 <p>No articles found.</p>
             ) : (
                 <table className="table table-hover">
@@ -103,7 +145,7 @@ const ArticlesOverviewTableByToday: React.FC = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {articles.map((article) => (
+                        {filteredArticles.map((article) => (
                             <React.Fragment key={article.id}>
                                 <tr
                                     onClick={() => article.id !== undefined && toggleArticleDetails(article.id)}
@@ -128,6 +170,7 @@ const ArticlesOverviewTableByToday: React.FC = () => {
                                                         minute: '2-digit',
                                                     })}
                                                 </p>
+                                                <button onClick={() => article.id !== undefined && handleLikeArticle(article.id)}>Like</button>
                                                 <h3>Reviews:</h3>
                                                 {article.reviews.length === 0 ? (
                                                     <p>No reviews found.</p>
