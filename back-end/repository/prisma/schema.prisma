@@ -15,9 +15,11 @@ model User {
   username     String        @unique
   password     String
   role         String
-  articles     Article[]     // One-to-many with Article
-  reviews      Review[]      // One-to-many with Review
-  articleLikes ArticleLike[] // Many-to-many via ArticleLike
+  articles     Article[]     
+  reviews      Review[]      
+  articleLikes ArticleLike[] 
+
+  @@map("user")
 }
 
 model Article {
@@ -33,6 +35,8 @@ model Article {
   paper        Paper?        @relation(fields: [paperId], references: [id])
   reviews      Review[]      // One-to-many with Review
   articleLikes ArticleLike[] // Many-to-many via ArticleLike
+
+  @@map("article")
 }
 
 model Paper {
@@ -41,6 +45,8 @@ model Paper {
   namePaper    String
   namePublisher String
   articles     Article[]     // One-to-many with Article
+
+  @@map("paper")
 }
 
 model Review {
@@ -52,6 +58,8 @@ model Review {
   articleId    Int
   user         User          @relation(fields: [userId], references: [id])
   article      Article       @relation(fields: [articleId], references: [id])
+
+  @@map("review")
 }
 
 model ArticleLike {
@@ -63,4 +71,5 @@ model ArticleLike {
   article      Article       @relation(fields: [articleId], references: [id])
   
   @@unique([userId, articleId]) 
+  @@map("article_like")
 }

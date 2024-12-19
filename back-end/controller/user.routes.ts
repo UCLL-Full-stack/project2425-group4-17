@@ -292,18 +292,18 @@ userRouter.put(
 
 userRouter.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = parseInt(req.params.id, 10);
-        const psdRequest = <JwtRequest>req;
-        if (!psdRequest.auth) {
-            throw new UnauthorizedError("credentials_required", { message: "Missing credentials" });
-        } else {
-            const { role, id: currentUserId } = psdRequest.auth;
-            await userService.deleteUser(userId, role, currentUserId);
-            res.sendStatus(204);
-        }
+      const userId = parseInt(req.params.id, 10);
+      const psdRequest = <JwtRequest>req;
+      if (!psdRequest.auth) {
+        throw new UnauthorizedError("credentials_required", { message: "Missing credentials" });
+      } else {
+        const { role, id: currentUserId } = psdRequest.auth;
+        await userService.deleteUser(userId, role, currentUserId);
+        res.sendStatus(204);
+      }
     } catch (error) {
-        next(error);
+      next(error);
     }
-});
+  });
 
 export { userRouter };

@@ -88,6 +88,11 @@ const deleteUser = async (id: number): Promise<void> => {
     try {
         await database.user.delete({
             where: { id },
+            include: {
+                articles: true,
+                reviews: true,
+                articleLikes: true,
+            },
         });
     } catch (error) {
         console.error(error);

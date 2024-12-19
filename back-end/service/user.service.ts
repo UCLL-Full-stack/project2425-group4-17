@@ -80,16 +80,16 @@ const authenticate = async ({ username, password }: UserInput): Promise<Authenti
 
 const deleteUser = async (id: number, role: string, currentUserId: number): Promise<void> => {
     if (role !== 'admin' && id !== currentUserId) {
-        throw new Error('UnauthorizedError: Only admins can delete other users');
+      throw new Error('UnauthorizedError: Only admins can delete other users');
     }
-
+  
     try {
-        await userDB.deleteUser(id);
+      await userDB.deleteUser(id);
     } catch (error) {
-        console.error(error);
-        throw new Error('Error deleting user from the database.');
+      console.error(error);
+      throw new Error('Error deleting user from the database.');
     }
-};
+  };
 
 
 export default { getAllUsers, getUserByUsername, getProfile, createUser, updateUser, authenticate, deleteUser };
