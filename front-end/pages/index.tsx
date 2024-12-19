@@ -28,7 +28,7 @@ const Home: React.FC = () => {
         <Header />
         <main className="">
         <div className={styles.homeContainer}>
-            <h1 className={styles.title}>Welcome to The Voyager</h1>
+            <h1 className={styles.title}>Welcome to The Voyager!</h1>
         </div>
         <ArticlesOverviewTableByToday />
         </main>
