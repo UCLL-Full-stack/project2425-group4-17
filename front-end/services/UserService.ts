@@ -28,8 +28,6 @@ const getAllUsers = async () => {
 };
 
 const getUserByUsername = async (username: string) => {
-    console.log('loggedInUser:', localStorage.getItem('loggedInUser'));
-    console.log(`${process.env.NEXT_PUBLIC_API_URL}/users/${username}`);
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${username}`, {
     
     method: 'GET',
