@@ -1,6 +1,6 @@
-// ArticlesToday.tsx
 import React, { useEffect, useState } from 'react';
-import { PaperInput } from '@types';
+import PaperService from '../../services/PaperService'; // Import PaperService
+import { PaperInput } from '../../types';
 
 const ArticlesToday: React.FC = () => {
   const [articles, setArticles] = useState<PaperInput[]>([]);
@@ -14,14 +14,9 @@ const ArticlesToday: React.FC = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch('/papers');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const filteredArticles = data.filter((article: PaperInput) =>
-          article.date.startsWith(selectedDate)
+        const papers = await PaperService.getAllPapers(); // Use PaperService to fetch papers
+        const filteredArticles = papers.filter((paper: PaperInput) =>
+          paper.date.startsWith(selectedDate)
         );
 
         setArticles(filteredArticles);
@@ -47,11 +42,7 @@ const ArticlesToday: React.FC = () => {
       <h1>Articles for {selectedDate}</h1>
       <label>
         Select date:
-        <input
-          type="date"
-          value={selectedDate}
-          onChange={handleDateChange}
-        />
+        <input type="date" value={selectedDate} onChange={handleDateChange} />
       </label>
       {articles.length === 0 ? (
         <p>No articles found for the selected date.</p>

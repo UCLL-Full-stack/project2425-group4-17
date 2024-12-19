@@ -1,23 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { UserInput } from "@types";
-
+import React, { useEffect, useState } from 'react';
+import UserService from '../../services/UserService'; // Import UserService
+import { UserShow} from '../../types';
 
 const UserList: React.FC = () => {
-  const [users, setUsers] = useState<UserInput[]>([]);
+  const [users, setUsers] = useState<UserShow[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/users", {
-      method: "GET",
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch users");
-        }
-        return response.json();
-      })
-      .then((data) => setUsers(data))
-      .catch((err) => setError(err.message));
+    const fetchUsers = async () => {
+      try {
+        const users = await UserService.getAllUsers(); // Fetch raw user data
+        setUsers(users);
+      } catch (err) {
+        setError('Failed to fetch users.');
+      }
+    };
+
+    fetchUsers();
   }, []);
 
   if (error) {
@@ -41,7 +40,7 @@ const UserList: React.FC = () => {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr>
+              <tr key={user.id}>
                 <td className="border border-gray-300 px-4 py-2">{user.username}</td>
                 <td className="border border-gray-300 px-4 py-2">
                   {user.firstName} {user.lastName}

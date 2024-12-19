@@ -1,36 +1,36 @@
-import React, { useEffect, useState } from "react";
-import Head from "next/head";
-import Header from "@components/header";
-import { UserInput } from "@types";
+import React, { useEffect, useState } from 'react';
+import Head from 'next/head';
+import Header from '@components/header';
+import UserService from '../../services/UserService';
+import { UserInput } from '../../types';
 
 const ProfilePage: React.FC = () => {
   const [user, setUser] = useState<UserInput | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("loggedInUser")
-      ? JSON.parse(localStorage.getItem("loggedInUser") || "{}").token
-      : null;
+    const fetchUserProfile = async () => {
+      try {
+        const token = localStorage.getItem('loggedInUser')
+          ? JSON.parse(localStorage.getItem('loggedInUser') || '{}').token
+          : null;
 
-    if (!token) {
-      setError("User not logged in.");
-      return;
-    }
-
-    fetch("/api/users/me", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch user data");
+        if (!token) {
+          setError('User not logged in.');
+          return;
         }
-        return response.json();
-      })
-      .then((data) => setUser(data))
-      .catch((err) => setError(err.message));
+        
+        const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString('utf-8'));
+        const username = payload.username;
+        const profile = await UserService.getUserByUsername(username);
+        setUser(profile);
+
+      } catch (err) {
+        setError('Failed to fetch user data.');
+      }
+    };
+
+    fetchUserProfile();
   }, []);
 
   if (error) {

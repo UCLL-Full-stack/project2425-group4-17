@@ -26,6 +26,17 @@ export type Article = {
     articleLikes: ArticleLikes[];
 };
 
+export type UserShow = {
+    id?: number;
+    firstName?: string;
+    lastName?: string;
+    fullname?: string;
+    email?: string;
+    username?: string;
+    password?: string;
+    role?: string;
+};
+
 export type  PaperInput = {
   id: number;
   date: string;
