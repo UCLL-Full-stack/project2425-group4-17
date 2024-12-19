@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 const Header: React.FC = () => {
-  const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<{ username: string; role: string } | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
     if (user) {
-      setLoggedInUser(user.fullname || user.username);
+      setLoggedInUser({ username: user.username, role: user.role });
     }
   }, []);
 
@@ -30,12 +30,16 @@ const Header: React.FC = () => {
             <Link href="/" className="nav-link px-4 fs-5 text-white">
               Home
             </Link>
-            <Link href="/articles" className="nav-link px-4 fs-5 text-white">
-              Articles
-            </Link>
-            <Link href="/articles/createArticle" className="nav-link px-4 fs-5 text-white">
-              Create Article
-            </Link>
+            {loggedInUser.role === 'admin' && (
+              <Link href="/articles" className="nav-link px-4 fs-5 text-white">
+                Articles
+              </Link>
+            )}
+            {(loggedInUser.role === 'admin' || loggedInUser.role === 'journalist') && (
+              <Link href="/articles/createArticle" className="nav-link px-4 fs-5 text-white">
+                Create Article
+              </Link>
+            )}
             <button
               onClick={handleLogout}
               className="nav-link px-4 fs-5 text-white bg-transparent border-0"
@@ -44,16 +48,21 @@ const Header: React.FC = () => {
               Logout
             </button>
             <div className="text-white ms-4 fs-6 align-self-center">
-              Welcome, {loggedInUser}!
+              Welcome, {loggedInUser.username}!
             </div>
             <Link href="/user" className="nav-link px-4 fs-5 text-white">
               <i className="fa-solid fa-user"></i>
             </Link>
           </>
         ) : (
-          <Link href="/login" className="nav-link px-4 fs-5 text-white">
-            Login
-          </Link>
+          <div className="d-flex">
+            <Link href="/login" className="nav-link px-4 fs-5 text-white">
+              Login
+            </Link>
+            <Link href="/signUp" className="nav-link px-4 fs-5 text-white">
+              Create Account
+            </Link>
+          </div>
         )}
       </nav>
     </header>

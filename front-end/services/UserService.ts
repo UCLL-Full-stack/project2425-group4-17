@@ -31,6 +31,16 @@ const loginUser = (userInput: UserInput) => {
     });
 };
 
+const createUser = (userInput: UserInput) => {
+  return fetch(process.env.NEXT_PUBLIC_API_URL + "/users/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userInput),
+  });
+};
+
 const deleteUser = (id: number, token: string) => {
   return fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}`, {
     method: "DELETE",
@@ -45,6 +55,7 @@ const UserService = {
     getUserInfo,
     updateUserInfo,
     loginUser,
+    createUser,
     deleteUser,
 };
 
