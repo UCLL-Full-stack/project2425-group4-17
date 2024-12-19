@@ -142,21 +142,21 @@ const ArticlesOverviewTableByToday: React.FC = () => {
                         <div
                             key={article.id}
                             className={`${styles.articleCard} ${expandedArticleId === article.id ? styles.expanded : ''}`}
-                            onClick={() => handleCardClick(article.id)}
+                            onClick={() => article.id !== undefined && handleCardClick(article.id)}
                         >
                             {expandedArticleId === article.id && (
                                 <i
                                     className={`fa-solid fa-xmark ${styles.closeIcon}`}
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        toggleArticleDetails(article.id);
+                                        article.id !== undefined && toggleArticleDetails(article.id);
                                     }}
                                 ></i>
                             )}
                             <h2
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    toggleArticleDetails(article.id);
+                                    article.id !== undefined && toggleArticleDetails(article.id);
                                 }}
                             >
                                 {article.title}

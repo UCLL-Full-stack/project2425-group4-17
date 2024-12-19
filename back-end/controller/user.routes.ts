@@ -112,6 +112,36 @@ userRouter.get(
 
 /**
  * @swagger
+ * /users/profile:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Get the profile of the authenticated user
+ *     responses:
+ *       200:
+ *         description: The profile of the authenticated user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized
+ */
+userRouter.get('/profile', async (req: JwtRequest, res: Response, next: NextFunction) => {
+    try {
+        const username = req.auth?.username;
+        if (!username) {
+            throw new UnauthorizedError('credentials_required', { message: 'Missing credentials' });
+        }
+        const user = await userService.getProfile({ username });
+        res.status(200).json(user);
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * @swagger
  * /users/signup:
  *   post:
  *     summary: Create a new user
@@ -260,16 +290,15 @@ userRouter.put(
  *         description: Bad request or validation error.
  */
 
-userRouter.delete('/:id', async (req: Request , res: Response, next: NextFunction) => {
+userRouter.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = parseInt(req.params.id, 10);
-        const psdRequest = <JwtRequest>req
-        if(!psdRequest.auth){
-            throw new UnauthorizedError("credentials_required", {message: "Missing credentials"});
-        }
-        else{
-            const { role } = psdRequest.auth;
-            await userService.deleteUser(userId, role);
+        const psdRequest = <JwtRequest>req;
+        if (!psdRequest.auth) {
+            throw new UnauthorizedError("credentials_required", { message: "Missing credentials" });
+        } else {
+            const { role, id: currentUserId } = psdRequest.auth;
+            await userService.deleteUser(userId, role, currentUserId);
             res.sendStatus(204);
         }
     } catch (error) {

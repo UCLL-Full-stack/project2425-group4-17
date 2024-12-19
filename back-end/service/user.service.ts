@@ -16,6 +16,14 @@ const getUserByUsername = async ({ username }: { username: string }): Promise<Us
     return user;
 };
 
+const getProfile = async ({ username }: { username: string }): Promise<User> => {
+    const user = await userDB.getUserByUsername({ username });
+    if (!user) {
+        throw new Error(`User with username: ${username} does not exist.`);
+    }
+    return user;
+};
+
 const createUser = async ({username, firstName, lastName, email, role, password }: UserInput): Promise<User> => {
     if (!username || !password) {
         throw new Error('Username and password are required');
@@ -50,7 +58,6 @@ const updateUser = async (id: number, updates: Partial<{ firstName: string; last
     return await userDB.updateUser(id, updates);
 };
 
-
 const authenticate = async ({ username, password }: UserInput): Promise<AuthenticationResponse> => {
     if (!username || !password) {
         throw new Error('Username and password are required');
@@ -71,9 +78,9 @@ const authenticate = async ({ username, password }: UserInput): Promise<Authenti
     };
 };
 
-const deleteUser = async (id: number, role: string): Promise<void> => {
-    if (role !== 'admin') {
-        throw new Error('UnauthorizedError: Only admins can delete users');
+const deleteUser = async (id: number, role: string, currentUserId: number): Promise<void> => {
+    if (role !== 'admin' && id !== currentUserId) {
+        throw new Error('UnauthorizedError: Only admins can delete other users');
     }
 
     try {
@@ -85,4 +92,4 @@ const deleteUser = async (id: number, role: string): Promise<void> => {
 };
 
 
-export default { getAllUsers, getUserByUsername, createUser, updateUser, authenticate, deleteUser };
+export default { getAllUsers, getUserByUsername, getProfile, createUser, updateUser, authenticate, deleteUser };

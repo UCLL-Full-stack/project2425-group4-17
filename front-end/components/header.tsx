@@ -46,6 +46,9 @@ const Header: React.FC = () => {
             <div className="text-white ms-4 fs-6 align-self-center">
               Welcome, {loggedInUser}!
             </div>
+            <Link href="/user" className="nav-link px-4 fs-5 text-white">
+              <i className="fa-solid fa-user"></i>
+            </Link>
           </>
         ) : (
           <Link href="/login" className="nav-link px-4 fs-5 text-white">
