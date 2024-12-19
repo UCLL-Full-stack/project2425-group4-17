@@ -3,6 +3,9 @@ import { Article, ReviewInput } from '@types';
 import ArticleService from '@services/ArticleService';
 import ReviewService from '@services/ReviewService';
 import ArticleLikesService from '@services/ArticleLikesService';
+import styles from '@styles/home.module.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 const ArticlesOverviewTableByToday: React.FC = () => {
     const [articles, setArticles] = useState<Article[]>([]);
@@ -98,24 +101,13 @@ const ArticlesOverviewTableByToday: React.FC = () => {
             alert('Article not found.');
             return;
         }
-
-        if (article.user.id === user.id) {
-            alert('You cannot like your own article.');
-            return;
-        }
-
-        if (article.articleLikes.some(like => like.user.id === user.id)) {
-            alert('You have already liked this article.');
-            return;
-        }
-
         try {
             await ArticleLikesService.createArticleLike(articleId, user.token);
             const updatedArticles = await ArticleService.getArticlesOfToday();
             const sortedUpdatedArticles = updatedArticles.sort((a: Article, b: Article) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
             setArticles(sortedUpdatedArticles);
         } catch (err) {
-            alert('Failed to like the article.');
+            alert('You have already liked this article.');
         }
     };
 
@@ -125,18 +117,19 @@ const ArticlesOverviewTableByToday: React.FC = () => {
     if (error) return <p>{error}</p>;
 
     return (
-        <div>
+        <div className={styles.container}>
             <h1>Today's Articles</h1>
             <input
                 type="text"
                 placeholder="Search by title"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                className={styles['search-input']}
             />
             {filteredArticles.length === 0 ? (
                 <p>No articles found.</p>
             ) : (
-                <table className="table table-hover">
+                <table className={`${styles.table} ${styles['table-hover']}`}>
                     <thead>
                         <tr>
                             <th scope="col">Title</th>
@@ -158,76 +151,100 @@ const ArticlesOverviewTableByToday: React.FC = () => {
                                 {expandedArticleId === article.id && (
                                     <tr>
                                         <td colSpan={3}>
-                                            <div>
-                                                <h2>{article.title}</h2>
-                                                <p>{article.summary}</p>
-                                                <img src={article.picture} alt={article.title} />
-                                                <p>By: {article.user.username}</p>
-                                                <p>
-                                                    Published at:{' '}
-                                                    {new Date(article.publishedAt).toLocaleTimeString([], {
-                                                        hour: '2-digit',
-                                                        minute: '2-digit',
-                                                    })}
-                                                </p>
-                                                <button onClick={() => article.id !== undefined && handleLikeArticle(article.id)}>Like</button>
-                                                <h3>Reviews:</h3>
-                                                {article.reviews.length === 0 ? (
-                                                    <p>No reviews found.</p>
-                                                ) : (
-                                                    <ul>
-                                                        {article.reviews.map((review) => (
-                                                            <li key={review.id}>
-                                                                <strong>{review.title}</strong>
-                                                                <p>{review.content}</p>
-                                                                <p>Rating: {review.rating}</p>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                )}
-                                                <h3>Write a Review:</h3>
-                                                <form
-                                                    onSubmit={(e) => {
-                                                        e.preventDefault();
-                                                        article.id !== undefined && handleReviewSubmit(article.id);
-                                                    }}
-                                                >
+                                            <div className={styles['article-details']}>
+                                                <h1>{article.title}</h1>
+                                                <div className={styles['grid-article-details']}>
                                                     <div>
-                                                        <label htmlFor="reviewTitle">Title</label>
-                                                        <input
-                                                            type="text"
-                                                            id="reviewTitle"
-                                                            value={reviewTitle}
-                                                            onChange={(e) => setReviewTitle(e.target.value)}
-                                                            required
-                                                        />
+                                                        <p>{article.summary}</p>
                                                     </div>
                                                     <div>
-                                                        <label htmlFor="reviewContent">Content</label>
-                                                        <textarea
-                                                            id="reviewContent"
-                                                            value={reviewContent}
-                                                            onChange={(e) => setReviewContent(e.target.value)}
-                                                            required
-                                                        />
+                                                        <img src={article.picture} alt={article.title} className={styles['article-image']} /> 
+                                                    </div>
+                                                </div>
+                                                <p className={styles.author}>By: {article.user.username}</p>
+                                                <hr></hr>
+                                                <div className={styles['grid-article-details-like']}>
+                                                    <div>
+                                                        <button className={styles['like-button']} onClick={() => article.id !== undefined && handleLikeArticle(article.id)}>
+                                                            <i className="fa-regular fa-thumbs-up"></i>{' '}
+                                                        </button>
                                                     </div>
                                                     <div>
-                                                        <label htmlFor="reviewRating">Rating</label>
-                                                        <input
-                                                            type="number"
-                                                            id="reviewRating"
-                                                            value={reviewRating || ''}
-                                                            onChange={(e) => setReviewRating(Number(e.target.value))}
-                                                            min="0"
-                                                            max="5"
-                                                            required
-                                                        />
+                                                        <p className={styles['published-at']}>
+                                                            Published at:{' '}
+                                                            {new Date(article.publishedAt).toLocaleTimeString([], {
+                                                                hour: '2-digit',
+                                                                minute: '2-digit',
+                                                            })}
+                                                        </p>
                                                     </div>
-                                                    {reviewError && <p style={{ color: 'red' }}>{reviewError}</p>}
-                                                    <button type="submit" disabled={reviewLoading}>
-                                                        {reviewLoading ? 'Submitting...' : 'Submit Review'}
-                                                    </button>
-                                                </form>
+                                                </div>
+                                                <br />
+                                                <div className={styles.reviews}>
+                                                    <h3>Reviews:</h3>
+                                                    {article.reviews.length === 0 ? (
+                                                        <p>No reviews found.</p>
+                                                    ) : (
+                                                        <ul>
+                                                            {article.reviews.map((review) => (
+                                                                <li key={review.id}>
+                                                                    <strong>{review.title}</strong>
+                                                                    <p>{review.content}</p>
+                                                                    <br />
+                                                                    <p>{Array.from({ length: review.rating }, (_, i) => (
+                                                                        <i key={i} className="fa-solid fa-star"></i>
+                                                                    ))}</p>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    )}
+                                                </div>
+                                                <div className={styles['review-form']}>
+                                                    <br /><br /><br />
+                                                    <h3>Write a Review:</h3>
+                                                    <form
+                                                        onSubmit={(e) => {
+                                                            e.preventDefault();
+                                                            article.id !== undefined && handleReviewSubmit(article.id);
+                                                        }}
+                                                    >
+                                                        <div>
+                                                            <label htmlFor="reviewTitle">Title</label>
+                                                            <input
+                                                                type="text"
+                                                                id="reviewTitle"
+                                                                value={reviewTitle}
+                                                                onChange={(e) => setReviewTitle(e.target.value)}
+                                                                required
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label htmlFor="reviewContent">Content</label>
+                                                            <textarea
+                                                                id="reviewContent"
+                                                                value={reviewContent}
+                                                                onChange={(e) => setReviewContent(e.target.value)}
+                                                                required
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label htmlFor="reviewRating">Rating (1-5)</label>
+                                                            <input
+                                                                type="number"
+                                                                id="reviewRating"
+                                                                value={reviewRating || ''}
+                                                                onChange={(e) => setReviewRating(Number(e.target.value))}
+                                                                min="0"
+                                                                max="5"
+                                                                required
+                                                            />
+                                                        </div>
+                                                        {reviewError && <p style={{ color: 'red' }}>{reviewError}</p>}
+                                                        <button type="submit" disabled={reviewLoading}>
+                                                            {reviewLoading ? 'Submitting...' : 'Submit Review'}
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>

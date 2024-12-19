@@ -1,0 +1,191 @@
+.homeContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 20vh;
+    text-align: center;
+}
+
+.title {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.table th, .table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.table th {
+    background-color: #f4f4f4;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.article-details {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.article-details img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.article-details h1 {
+    margin-top: 0;
+    color: #2e3275;
+}
+
+.article-details p {
+    margin: 10px 0;
+}
+
+.article-details .author {
+    font-weight: bold;
+    color: #555555;
+}
+
+.article-details .published-at {
+    font-style: italic;
+    text-align: right   ;
+    color: #888;
+}
+
+.article-details .like-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.article-details .like-button:hover {
+    background-color: #0056b3;
+}
+
+.grid-article-details {
+    display: grid;
+    grid-template-columns: auto auto;
+    padding: 1rem;
+}
+
+.grid-article-details > div:first-child {
+  text-align: left;
+}
+
+.grid-article-details > div:last-child {
+  text-align: right;
+}
+
+.grid-article-details-like {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.grid-article-details-like > div:first-child {
+    text-align: left;
+  }
+  
+  .grid-article-details-like > div:last-child {
+    text-align: right;
+  }
+
+.reviews {
+    margin-top: 20px;
+}
+
+.reviews h3 {
+    margin-bottom: 10px;
+    color: #2e3275;
+}
+
+.reviews ul {
+    padding: 0;
+    list-style: none;
+}
+
+.reviews li {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
+
+.reviews li strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #2e3275;
+}
+
+.reviews li p {
+    margin: 5px 0;
+}
+
+.review-form {
+    margin-top: 20px;
+}
+
+.review-form div {
+    margin-bottom: 10px;
+}
+
+.review-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.review-form input, .review-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.review-form button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.review-form button:disabled {
+    background-color: #ccc;
+}
+
+.review-form button:hover:not(:disabled) {
+    background-color: #0056b3;
+}

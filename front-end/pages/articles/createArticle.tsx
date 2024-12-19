@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Header from '@components/header';
 import ArticleService from '@services/ArticleService';
+import styles from '@styles/articleForm.module.css';
 
 const CreateArticle: React.FC = () => {
   const [title, setTitle] = useState('');
@@ -48,7 +49,8 @@ const CreateArticle: React.FC = () => {
         <title>Create Article</title>
       </Head>
       <Header />
-      <main>
+      <br /><br />
+      <main className={styles.formContainer}>
         <h1>Create Article</h1>
         <form onSubmit={handleSubmit}>
           <div>
@@ -81,16 +83,26 @@ const CreateArticle: React.FC = () => {
             />
           </div>
           <div>
+            <br />
             <label htmlFor="articleType">Article Type</label>
-            <input
-              type="text"
+            <select
               id="articleType"
               value={articleType}
               onChange={(e) => setArticleType(e.target.value)}
               required
-            />
+            >
+              <option value="">Select an article type</option>
+              <option value="Informatif">Informatif</option>
+              <option value="Job add">Job add</option>
+              <option value="product add">product add</option>
+              <option value="sport">sport</option>
+              <option value="politics">politics</option>
+              <option value="global news">global news</option>
+              <option value="show bizz">show bizz</option>
+            </select>
           </div>
-          {error && <p>{error}</p>}
+          <br />
+          {error && <p className={styles.errorMessage}>{error}</p>}
           <button type="submit" disabled={loading}>
             {loading ? 'Creating...' : 'Create Article'}
           </button>
