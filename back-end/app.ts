@@ -10,11 +10,13 @@ import { userRouter } from './controller/user.routes';
 import { paperRouter } from './controller/paper.routes';
 import { reviewRouter } from './controller/review.routes';
 import { articleLikesRouter } from './controller/articlelikes.routes';
+import helmet from 'helmet';
 
 const app = express();
 dotenv.config();
 const port = process.env.APP_PORT || 3000;
 
+app.use(helmet());
 app.use(cors({ origin: 'http://localhost:8080' }));
 app.use(bodyParser.json());
 

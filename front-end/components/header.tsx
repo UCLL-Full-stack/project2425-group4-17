@@ -56,7 +56,7 @@ const Header: React.FC = () => {
               {t('header.logout')}
             </button>
             <div className="text-white ms-4 fs-6 align-self-center">
-              {t('header.welcome', { username: loggedInUser.username })}
+              Welcome, {loggedInUser.username}!
             </div>
             <Link href="/user" className="nav-link px-4 fs-5 text-white">
               <i className="fa-solid fa-user"></i>
