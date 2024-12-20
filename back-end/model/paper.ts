@@ -1,3 +1,4 @@
+import { Paper as PaperPrisma } from '@prisma/client';
 import { Article } from './article';
 
 export class Paper {
@@ -45,5 +46,34 @@ export class Paper {
     equals(paper: Paper): boolean {
         return this.id === paper.getId() && 
         this.date.getTime() === paper.getDate().getTime();
+    }
+
+    static from({
+        id,
+        date,
+        namePaper,
+        namePublisher
+    }: PaperPrisma): Paper {
+        return new Paper({
+            id,
+            date,
+            namePaper,
+            namePublisher,
+            articles: []
+        });
+    }
+
+    toJSON() {
+        return {
+            id: this.id,
+            date: this.date,
+            namePaper: this.namePaper,
+            namePublisher: this.namePublisher,
+            articles: this.articles.map(article => ({
+                id: article.getId,
+                title: article.getTitle,
+                summary: article.getSummary,
+            })),
+        };
     }
 }

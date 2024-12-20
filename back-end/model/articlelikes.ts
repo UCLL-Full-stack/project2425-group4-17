@@ -1,16 +1,17 @@
 import { User } from './user';
 import { Article } from './article';
+import { ArticleLike as ArticleLikesPrisma, User as UserPrisma, Article as ArticlePrisma } from '@prisma/client';
 
 export class ArticleLikes {
     private id?: number;
-    private user: User;
-    private article: Article;
+    private userId: number;
+    private articleId: number;
     private date: Date;
 
-    constructor(articleLikes: { id?: number; user: User; article: Article;date: Date; }) {
+    constructor(articleLikes: { id?: number; userId: number; articleId: number; date: Date; }) {
         this.id = articleLikes.id;
-        this.user = articleLikes.user;
-        this.article = articleLikes.article;
+        this.userId = articleLikes.userId;
+        this.articleId = articleLikes.articleId;
         this.date = articleLikes.date;
     }
 
@@ -18,22 +19,29 @@ export class ArticleLikes {
         return this.id;
     }
 
-    getUser(): User {
-        return this.user;
+    getUser(): number {
+        return this.userId;
     }
 
-    getArticle(): Article {
-        return this.article;
+    getArticle(): number {
+        return this.articleId;
     }
 
-    getDate():Date{
+    getDate(): Date {
         return this.date;
     }
 
-    equals(articleLikes: ArticleLikes): boolean {
-        return this.id === articleLikes.getId() &&
-         this.user.equals(articleLikes.getUser()) &&
-         this.article.equals(articleLikes.getArticle())&&
-         this.date.getTime() === articleLikes.getDate().getTime();
-    }
+    static from({
+        id,
+        user,
+        article,
+        date,
+    }: ArticleLikesPrisma & {user: UserPrisma, article: ArticlePrisma}): ArticleLikes {
+        return new ArticleLikes({
+            id,
+            userId: user.id,
+            articleId: article.id,
+            date,
+        });
+}
 }
