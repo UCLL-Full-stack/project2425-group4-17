@@ -1,10 +1,13 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Language from "../components/language/language";
+import { useTranslation } from "next-i18next";
 
 const Header: React.FC = () => {
   const [loggedInUser, setLoggedInUser] = useState<{ username: string; role: string } | null>(null);
   const router = useRouter();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
@@ -58,6 +61,7 @@ const Header: React.FC = () => {
             <Link href="/user" className="nav-link px-4 fs-5 text-white">
               <i className="fa-solid fa-user"></i>
             </Link>
+            <Language />
           </>
         ) : (
           <div className="d-flex">

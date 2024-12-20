@@ -5,10 +5,14 @@ import Header from '@components/header';
 import ArticlesOverviewTableByToday from '@components/articles/ArticlesOverviewTableByToday';
 import styles from '@styles/home.module.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import { GetServerSideProps } from 'next';
 
 
 const Home: React.FC = () => {
   const router = useRouter();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
@@ -20,7 +24,7 @@ const Home: React.FC = () => {
   return (
     <>
       <Head>
-        <title>The Voyager</title>
+        <title>{t('app.title')}</title>
         <meta name="description" content="Your daily news source" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
@@ -35,6 +39,16 @@ const Home: React.FC = () => {
       </div>
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { locale } = context;
+
+  return {
+      props: {
+          ...(await serverSideTranslations(locale ?? "en", ["common"])),
+      },
+  };
 };
 
 export default Home;

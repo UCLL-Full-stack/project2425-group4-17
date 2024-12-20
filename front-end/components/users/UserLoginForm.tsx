@@ -105,6 +105,46 @@ const UserLoginForm: React.FC = () => {
         {passwordError && <div className={styles.errorMessage}>{passwordError}</div>}
         <button type="submit">Login</button>
       </form>
+      <br /><br />
+      <div className="overflow-x-auto mt-6">
+            <h3 className="text-xl font-semibold mb-4">User Accounts</h3>
+            <table className="table-auto border-collapse border border-gray-300 w-full">
+                <thead>
+                    <tr className="bg-gray-200">
+                        <th className="border border-gray-300 px-4 py-2">Username</th>
+                        <th className="border border-gray-300 px-4 py-2">Password</th>
+                        <th className="border border-gray-300 px-4 py-2">Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr className="bg-gray-100">
+                        <td className="border border-gray-300 px-4 py-2">admin</td>
+                        <td className="border border-gray-300 px-4 py-2">admin</td>
+                        <td className="border border-gray-300 px-4 py-2">admin</td>
+                    </tr>
+                    <tr className="bg-white">
+                        <td className="border border-gray-300 px-4 py-2">Jhon</td>
+                        <td className="border border-gray-300 px-4 py-2">Doe</td>
+                        <td className="border border-gray-300 px-4 py-2">admin</td>
+                    </tr>
+                    <tr className="bg-gray-100">
+                        <td className="border border-gray-300 px-4 py-2">Rudy</td>
+                        <td className="border border-gray-300 px-4 py-2">rudy</td>
+                        <td className="border border-gray-300 px-4 py-2">journalist</td>
+                    </tr>
+                    <tr className="bg-white">
+                        <td className="border border-gray-300 px-4 py-2">ruben</td>
+                        <td className="border border-gray-300 px-4 py-2">ruben</td>
+                        <td className="border border-gray-300 px-4 py-2">journalist</td>
+                    </tr>
+                    <tr className="bg-gray-100">
+                        <td className="border border-gray-300 px-4 py-2">reader</td>
+                        <td className="border border-gray-300 px-4 py-2">reader</td>
+                        <td className="border border-gray-300 px-4 py-2">reader</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
   );
 };
