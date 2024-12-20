@@ -68,7 +68,7 @@ const PaperByDate: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Articles for {selectedDate}</h1>
+      <h1 className={styles.title}>Paper(s) for {selectedDate}</h1>
       <label className={styles.label}>
         Select date:
         <input type="date" value={selectedDate} onChange={handleDateChange} className={styles.input} />
