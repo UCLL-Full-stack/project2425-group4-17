@@ -1,3 +1,53 @@
 {
-    "app.title": "The Voyager"
+    "app.title": "The Voyager",
+    "app.Welcome":"Welcome to The Voyager!",
+    "loading": "loading...",
+    "ArticleOverview":{
+        "NotFound": "No articles found.",
+        "ListTitle": "Title",
+        "ListDate": "Published Date",
+        "ListType": "Type",
+        "ErrorNotFetched":"Failed to fetch articles.",
+        "ErrorNotFound":"Article not found.",
+        "ErrorOwn":"'You cannot review your own article.'",
+        "ErrorNotLoggedIn":"You must be logged in to create a review.",
+        "ErrorAlreadyLiked":"You have already reviewed this article.",
+        "ErrorCreateReview":"Failed to create review.",
+        "Today":"Today's Articles",
+        "Likes":"Likes",
+        "PublishedAt": "Published at:",
+        "review":"Reviews:",
+        "ReviewsNotFound":"No reviews found.",
+        "write":"Write a Review:",
+        "content":"Content",
+        "rating":"Rating"
+    },
+    "Paper":{
+        "PaperClass":"Paper for",
+        "SelectDate":"Select date:",
+        "ErrorNoArticles":"No articles found for the selected date.",
+        "publisher":"Publisher:",
+        "Create":"Create a new paper",
+        "LabelName":"Paper Name",
+        "LabelPublisher":"Publisher Name"
+    },
+    "Login":{
+        "SuccesLogin":"Login successful. Redirecting to home...",
+        "FailedLogin":"Failed to login...",
+        "Login":"Login",
+        "Username":"Username",
+        "Password":"Password",
+        "ButtonLogin":"Login",
+        "UserAccounts":"User Accounts"
+    },
+    "Header":{
+        "Home":"Home",
+        "Articles": "Articles",
+        "CreateArticle": "Create Article",
+        "Paper":"Paper",
+        "Logout":"Logout",
+        "Welcome": "Welcome, ",
+        "CreateAccount": "Create Account"
+    }
+    
 }

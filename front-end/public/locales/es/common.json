@@ -1,3 +1,51 @@
 {
-    "app.title": "El viajero"
+    "app.title": "El Viajero",
+    "loading": "cargando...",
+    "ArticleOverview": {
+        "NotFound": "No se encontraron artículos.",
+        "ListTitle": "Título",
+        "ListDate": "Fecha de Publicación",
+        "ListType": "Tipo",
+        "ErrorNotFetched": "No se pudieron obtener los artículos.",
+        "ErrorNotFound": "Artículo no encontrado.",
+        "ErrorOwn": "No puedes revisar tu propio artículo.",
+        "ErrorNotLoggedIn": "Debes iniciar sesión para crear una reseña.",
+        "ErrorAlreadyLiked": "Ya has revisado este artículo.",
+        "ErrorCreateReview": "No se pudo crear la reseña.",
+        "Today": "Artículos de Hoy",
+        "Likes": "Me gusta",
+        "PublishedAt": "Publicado en:",
+        "review": "Reseñas:",
+        "ReviewsNotFound": "No se encontraron reseñas.",
+        "write": "Escribe una Reseña:",
+        "content": "Contenido",
+        "rating": "Calificación"
+    },
+    "Paper": {
+        "PaperClass": "Papel para",
+        "SelectDate": "Seleccionar fecha:",
+        "ErrorNoArticles": "No se encontraron artículos para la fecha seleccionada.",
+        "publisher": "Editor:",
+        "Create": "Crear un nuevo papel",
+        "LabelName": "Nombre del Papel",
+        "LabelPublisher": "Nombre del Editor"
+    },
+    "Login": {
+        "SuccesLogin": "Inicio de sesión exitoso. Redirigiendo a la página principal...",
+        "FailedLogin": "No se pudo iniciar sesión...",
+        "Login": "Iniciar Sesión",
+        "Username": "Nombre de Usuario",
+        "Password": "Contraseña",
+        "ButtonLogin": "Iniciar Sesión",
+        "UserAccounts": "Cuentas de Usuario"
+    },
+    "Header": {
+        "Home": "Inicio",
+        "Articles": "Artículos",
+        "CreateArticle": "Crear Artículo",
+        "Paper": "Papel",
+        "Logout": "Cerrar Sesión",
+        "Welcome": "Bienvenido, ",
+        "CreateAccount": "Crear Cuenta"
+    }
 }
