@@ -1,0 +1,31 @@
+.container {
+    padding: 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .label {
+    display: block;
+    margin-bottom: 1rem;
+  }
+  
+  .input {
+    margin-left: 0.5rem;
+  }
+  
+  .articlesList {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .articleItem {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }

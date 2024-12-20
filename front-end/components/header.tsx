@@ -40,6 +40,11 @@ const Header: React.FC = () => {
                 Create Article
               </Link>
             )}
+            {(loggedInUser.role === 'admin') && (
+              <Link href="/papers" className="nav-link px-4 fs-5 text-white">
+                Paper
+              </Link>
+            )}
             <button
               onClick={handleLogout}
               className="nav-link px-4 fs-5 text-white bg-transparent border-0"

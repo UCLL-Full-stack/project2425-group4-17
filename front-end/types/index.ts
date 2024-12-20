@@ -55,6 +55,13 @@ export type Paper = {
     publishedAt: Date;
 };
 
+export type  PaperInput = {
+    id: number;
+    date: string;
+    namePaper: string;
+    namePublisher: string;
+  };
+
 export type StatusMessage = {
     message: string;
     type: "error" | "success";
