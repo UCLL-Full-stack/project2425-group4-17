@@ -2,52 +2,59 @@
     "app.title": "The Voyager",
     "app.Welcome":"Welcome to The Voyager!",
     "loading": "loading...",
-    "ArticleOverview":{
-        "NotFound": "No articles found.",
-        "ListTitle": "Title",
-        "ListDate": "Published Date",
-        "ListType": "Type",
-        "ErrorNotFetched":"Failed to fetch articles.",
-        "ErrorNotFound":"Article not found.",
-        "ErrorOwn":"'You cannot review your own article.'",
-        "ErrorNotLoggedIn":"You must be logged in to create a review.",
-        "ErrorAlreadyLiked":"You have already reviewed this article.",
-        "ErrorCreateReview":"Failed to create review.",
+    "articleOverview":{
+        "notFound": "No articles found.",
+        "listTitle": "Title",
+        "listDate": "Published Date",
+        "listType": "Type",
+        "errorNotFetched":"Failed to fetch articles.",
+        "errorNotFound":"Article not found.",
+        "errorOwn":"'You cannot review your own article.'",
+        "errorNotLoggedIn":"You must be logged in to create a review.",
+        "errorAlreadyLiked":"You have already reviewed this article.",
+        "errorCreateReview":"Failed to create review.",
         "Today":"Today's Articles",
         "Likes":"Likes",
-        "PublishedAt": "Published at:",
+        "publishedAt": "Published at:",
         "review":"Reviews:",
-        "ReviewsNotFound":"No reviews found.",
+        "reviewsNotFound":"No reviews found.",
         "write":"Write a Review:",
         "content":"Content",
         "rating":"Rating"
     },
-    "Paper":{
-        "PaperClass":"Paper for",
-        "SelectDate":"Select date:",
-        "ErrorNoArticles":"No articles found for the selected date.",
+    "paper":{
+        "paperClass":"Paper for",
+        "selectDate":"Select date:",
+        "errorNoArticles":"No articles found for the selected date.",
         "publisher":"Publisher:",
-        "Create":"Create a new paper",
-        "LabelName":"Paper Name",
-        "LabelPublisher":"Publisher Name"
+        "create":"Create a new paper",
+        "labelName":"Paper Name",
+        "labelPublisher":"Publisher Name",
+        "fetchError":"Failed to fetch articles.",
+        "createButton":"Create Paper",
+        "creating":"Creating...",
+        "createError":"Failed to create paper."
     },
-    "Login":{
-        "SuccesLogin":"Login successful. Redirecting to home...",
-        "FailedLogin":"Failed to login...",
-        "Login":"Login",
-        "Username":"Username",
-        "Password":"Password",
-        "ButtonLogin":"Login",
-        "UserAccounts":"User Accounts"
+    "login":{
+        "succesLogin":"Login successful. Redirecting to home...",
+        "failedLogin":"Failed to login...",
+        "login":"Login",
+        "username":"Username",
+        "password":"Password",
+        "role":"Role",
+        "buttonLogin":"Login",
+        "userAccounts":"User Accounts",
+        "passwordRequired":"Password is required",
+        "usernameRequired":"Username  is required"
     },
-    "Header":{
-        "Home":"Home",
-        "Articles": "Articles",
-        "CreateArticle": "Create Article",
-        "Paper":"Paper",
-        "Logout":"Logout",
-        "Welcome": "Welcome, ",
-        "CreateAccount": "Create Account"
+    "header":{
+        "home":"Home",
+        "articles": "Articles",
+        "createArticle": "Create Article",
+        "paper":"Paper",
+        "logout":"Logout",
+        "welcome": "Welcome, ",
+        "createAccount": "Create Account"
     }
     
 }
