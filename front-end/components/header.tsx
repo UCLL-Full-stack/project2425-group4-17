@@ -7,7 +7,7 @@ import { useTranslation } from "next-i18next";
 const Header: React.FC = () => {
   const [loggedInUser, setLoggedInUser] = useState<{ username: string; role: string } | null>(null);
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
@@ -31,21 +31,21 @@ const Header: React.FC = () => {
         {loggedInUser ? (
           <>
             <Link href="/" className="nav-link px-4 fs-5 text-white">
-              Home
+              {t('header.home')}
             </Link>
             {loggedInUser.role === 'admin' && (
               <Link href="/articles" className="nav-link px-4 fs-5 text-white">
-                Articles
+                {t('header.articles')}
               </Link>
             )}
             {(loggedInUser.role === 'admin' || loggedInUser.role === 'journalist') && (
               <Link href="/articles/createArticle" className="nav-link px-4 fs-5 text-white">
-                Create Article
+                {t('header.createArticle')}
               </Link>
             )}
             {(loggedInUser.role === 'admin') && (
               <Link href="/papers" className="nav-link px-4 fs-5 text-white">
-                Paper
+                {t('header.paper')}
               </Link>
             )}
             <button
@@ -53,10 +53,10 @@ const Header: React.FC = () => {
               className="nav-link px-4 fs-5 text-white bg-transparent border-0"
               style={{ cursor: 'pointer' }}
             >
-              Logout
+              {t('header.logout')}
             </button>
             <div className="text-white ms-4 fs-6 align-self-center">
-              Welcome, {loggedInUser.username}!
+              {t('header.welcome', { username: loggedInUser.username })}
             </div>
             <Link href="/user" className="nav-link px-4 fs-5 text-white">
               <i className="fa-solid fa-user"></i>
@@ -66,11 +66,12 @@ const Header: React.FC = () => {
         ) : (
           <div className="d-flex">
             <Link href="/login" className="nav-link px-4 fs-5 text-white">
-              Login
+              {t('header.login')}
             </Link>
             <Link href="/signUp" className="nav-link px-4 fs-5 text-white">
-              Create Account
+              {t('header.createAccount')}
             </Link>
+            <Language />
           </div>
         )}
       </nav>

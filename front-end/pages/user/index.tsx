@@ -5,6 +5,9 @@ import ArticleService from '@services/ArticleService';
 import Header from '@components/header';
 import profileStyles from '@styles/profile.module.css';
 import homeStyles from '@styles/home.module.css';
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { GetServerSideProps } from 'next';
 
 const UserInfo: React.FC = () => {
   const [user, setUser] = useState<any>(null);
@@ -14,6 +17,7 @@ const UserInfo: React.FC = () => {
   const [lastName, setLastName] = useState('');
   const [articles, setArticles] = useState<any[]>([]);
   const router = useRouter();
+  const { t } = useTranslation('common');
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -35,12 +39,12 @@ const UserInfo: React.FC = () => {
         const userArticles = articlesData.filter((article: any) => article.user.id === userData.id);
         setArticles(userArticles);
       } catch (err) {
-        setError('Failed to fetch user info.');
+        setError(t('userInfo.errorFetchUser'));
       }
     };
 
     fetchUser();
-  }, [router]);
+  }, [router, t]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -55,7 +59,7 @@ const UserInfo: React.FC = () => {
         setUser({ ...user, ...updatedUser });
         setIsEditing(false);
       } catch (err) {
-        setError('Failed to update user info.');
+        setError(t('userInfo.errorUpdateUser'));
       }
     }
   };
@@ -68,7 +72,7 @@ const UserInfo: React.FC = () => {
         localStorage.removeItem('loggedInUser');
         router.push('/login');
       } catch (err) {
-        setError('Failed to delete user.');
+        setError(t('userInfo.errorDeleteUser'));
       }
     }
   };
@@ -82,17 +86,17 @@ const UserInfo: React.FC = () => {
   }
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <div>{t('loading')}</div>;
   }
 
   return (
     <>
       <Header />
       <div className={profileStyles.profileContainer}>
-        <h1 className={profileStyles.profileTitle}>User Info</h1>
+        <h1 className={profileStyles.profileTitle}>{t('userInfo.title')}</h1>
         <div className={profileStyles.profileDetails}>
-          <p><strong>Username:</strong> {user.username}</p>
-          <p><strong>First Name:</strong> {isEditing ? (
+          <p><strong>{t('userInfo.username')}:</strong> {user.username}</p>
+          <p><strong>{t('userInfo.firstName')}:</strong> {isEditing ? (
             <input
               type="text"
               value={firstName}
@@ -101,7 +105,7 @@ const UserInfo: React.FC = () => {
           ) : (
             user.firstName
           )}</p>
-          <p><strong>Last Name:</strong> {isEditing ? (
+          <p><strong>{t('userInfo.lastName')}:</strong> {isEditing ? (
             <input
               type="text"
               value={lastName}
@@ -110,36 +114,46 @@ const UserInfo: React.FC = () => {
           ) : (
             user.lastName
           )}</p>
-          <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Role:</strong> {user.role}</p>
+          <p><strong>{t('userInfo.email')}:</strong> {user.email}</p>
+          <p><strong>{t('userInfo.role')}:</strong> {user.role}</p>
         </div>
         <div className={profileStyles.buttonContainer}>
           <button onClick={isEditing ? handleSaveClick : handleEditClick}>
-            {isEditing ? 'Save' : 'Edit'}
+            {isEditing ? t('userInfo.save') : t('userInfo.edit')}
           </button>
           <button onClick={handleDeleteClick} className={profileStyles.deleteButton}>
-            Delete
+            {t('userInfo.delete')}
           </button>
         </div>
       </div>
       <div className={homeStyles.articlesGrid}>
         <br /><br />
-        <h3>Your Articles</h3>
+        <h3>{t('userInfo.yourArticles')}</h3>
         {articles.length === 0 ? (
-          <p>No articles found.</p>
+          <p>{t('noArticles')}</p>
         ) : (
           articles.map(article => (
             <div key={article.id} className={homeStyles.articleCard}>
               <h3>{article.title}</h3>
               <p>{article.summary}</p>
-              <p><strong>Published at:</strong> {new Date(article.publishedAt).toLocaleDateString()}</p>
-              <button onClick={() => handleEditArticleClick(article.id)}>Edit</button>
+              <p><strong>{t('articleOverview.listDate')}:</strong> {new Date(article.publishedAt).toLocaleDateString()}</p>
+              <button onClick={() => handleEditArticleClick(article.id)}>{t('userInfo.edit')}</button>
             </div>
           ))
         )}
       </div>
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { locale } = context;
+
+  return {
+      props: {
+          ...(await serverSideTranslations(locale ?? "en", ["common", "userInfo"])),
+      },
+  };
 };
 
 export default UserInfo;

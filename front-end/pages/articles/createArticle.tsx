@@ -4,6 +4,9 @@ import Head from 'next/head';
 import Header from '@components/header';
 import ArticleService from '@services/ArticleService';
 import styles from '@styles/articleForm.module.css';
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { GetServerSideProps } from 'next';
 
 const CreateArticle: React.FC = () => {
   const [title, setTitle] = useState('');
@@ -13,6 +16,7 @@ const CreateArticle: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { t } = useTranslation('common');
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -21,7 +25,7 @@ const CreateArticle: React.FC = () => {
 
     const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
     if (!user || !user.token) {
-      setError('You must be logged in to create an article.');
+      setError(t('createArticle.errorNoLogin'));
       setLoading(false);
       return;
     }
@@ -37,7 +41,7 @@ const CreateArticle: React.FC = () => {
       await ArticleService.createArticle(articleData, user.token);
       router.push('/');
     } catch (err) {
-      setError('Failed to create article.');
+      setError(t('createArticle.errorFailed'));
     } finally {
       setLoading(false);
     }
@@ -46,15 +50,15 @@ const CreateArticle: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Create Article</title>
+        <title>{t('createArticle.pageTitle')}</title>
       </Head>
       <Header />
       <br /><br />
       <main className={styles.formContainer}>
-        <h1>Create Article</h1>
+        <h1>{t('createArticle.formTitle')}</h1>
         <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="title">Title</label>
+            <label htmlFor="title">{t('createArticle.title')}</label>
             <input
               type="text"
               id="title"
@@ -64,7 +68,7 @@ const CreateArticle: React.FC = () => {
             />
           </div>
           <div>
-            <label htmlFor="summary">Summary</label>
+            <label htmlFor="summary">{t('createArticle.summary')}</label>
             <textarea
               id="summary"
               value={summary}
@@ -73,7 +77,7 @@ const CreateArticle: React.FC = () => {
             />
           </div>
           <div>
-            <label htmlFor="picture">Picture URL</label>
+            <label htmlFor="picture">{t('createArticle.picture')}</label>
             <input
               type="text"
               id="picture"
@@ -84,32 +88,42 @@ const CreateArticle: React.FC = () => {
           </div>
           <div>
             <br />
-            <label htmlFor="articleType">Article Type</label>
+            <label htmlFor="articleType">{t('createArticle.articleType')}</label>
             <select
               id="articleType"
               value={articleType}
               onChange={(e) => setArticleType(e.target.value)}
               required
             >
-              <option value="">Select an article type</option>
-              <option value="Informatif">Informatif</option>
-              <option value="Job add">Job add</option>
-              <option value="product add">product add</option>
-              <option value="sport">sport</option>
-              <option value="politics">politics</option>
-              <option value="global news">global news</option>
-              <option value="show bizz">show bizz</option>
+              <option value="">{t('createArticle.selectArticleType')}</option>
+              <option value="Informatif">{t('createArticle.options.informatif')}</option>
+              <option value="Job add">{t('createArticle.options.jobAdd')}</option>
+              <option value="product add">{t('createArticle.options.productAdd')}</option>
+              <option value="sport">{t('createArticle.options.sport')}</option>
+              <option value="politics">{t('createArticle.options.politics')}</option>
+              <option value="global news">{t('createArticle.options.globalNews')}</option>
+              <option value="show bizz">{t('createArticle.options.showBizz')}</option>
             </select>
           </div>
           <br />
           {error && <p className={styles.errorMessage}>{error}</p>}
           <button type="submit" disabled={loading}>
-            {loading ? 'Creating...' : 'Create Article'}
+            {loading ? t('createArticle.creating') : t('createArticle.submitButton')}
           </button>
         </form>
       </main>
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { locale } = context;
+
+  return {
+      props: {
+          ...(await serverSideTranslations(locale ?? "en", ["common"])),
+      },
+  };
 };
 
 export default CreateArticle;

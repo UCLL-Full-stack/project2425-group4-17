@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
+import { useTranslation } from 'next-i18next';
 import UserService from '@services/UserService';
 import styles from '@styles/login.module.css';
 
 const UserLoginForm: React.FC = () => {
+  const { t } = useTranslation('common');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [statusMessages, setStatusMessages] = useState<{ message: string; type: string }[]>([]);
@@ -20,11 +22,11 @@ const UserLoginForm: React.FC = () => {
   const validate = () => {
     let valid = true;
     if (!name) {
-      setNameError('Username is required');
+      setNameError(t('login.usernameRequired'));
       valid = false;
     }
     if (!password) {
-      setPasswordError('Password is required');
+      setPasswordError(t('login.passwordRequired'));
       valid = false;
     }
     return valid;
@@ -41,7 +43,7 @@ const UserLoginForm: React.FC = () => {
 
     if (response.status === 200) {
       setStatusMessages([
-        { type: "success", message: "Login successful. Redirecting to home..." },
+        { type: "success", message: t('login.succesLogin') },
       ]);
 
       const userData = await response.json();
@@ -61,14 +63,14 @@ const UserLoginForm: React.FC = () => {
     } else {
       const errorData = await response.json();
       setStatusMessages([
-        { message: errorData.message || "Failed to login...", type: "error" },
+        { message: errorData.message || t('login.failedLogin'), type: "error" },
       ]);
     }
   };
 
   return (
     <div className={styles.loginContainer}>
-      <h3>Login</h3>
+      <h3>{t('login.login')}</h3>
       {statusMessages.length > 0 && (
         <div>
           <ul className="list-none mb-3 mx-auto">
@@ -87,7 +89,7 @@ const UserLoginForm: React.FC = () => {
         </div>
       )}
       <form onSubmit={handleSubmit}>
-        <label htmlFor="nameInput">Username</label>
+        <label htmlFor="nameInput">{t('login.username')}</label>
         <input
           id="nameInput"
           type="text"
@@ -95,7 +97,7 @@ const UserLoginForm: React.FC = () => {
           onChange={(event) => setName(event.target.value)}
         />
         {nameError && <div className={styles.errorMessage}>{nameError}</div>}
-        <label htmlFor="passwordInput">Password</label>
+        <label htmlFor="passwordInput">{t('login.password')}</label>
         <input
           id="passwordInput"
           type="password"
@@ -103,48 +105,48 @@ const UserLoginForm: React.FC = () => {
           onChange={(event) => setPassword(event.target.value)}
         />
         {passwordError && <div className={styles.errorMessage}>{passwordError}</div>}
-        <button type="submit">Login</button>
+        <button type="submit">{t('login.buttonLogin')}</button>
       </form>
       <br /><br />
       <div className="overflow-x-auto mt-6">
-            <h3 className="text-xl font-semibold mb-4">User Accounts</h3>
-            <table className="table-auto border-collapse border border-gray-300 w-full">
-                <thead>
-                    <tr className="bg-gray-200">
-                        <th className="border border-gray-300 px-4 py-2">Username</th>
-                        <th className="border border-gray-300 px-4 py-2">Password</th>
-                        <th className="border border-gray-300 px-4 py-2">Role</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr className="bg-gray-100">
-                        <td className="border border-gray-300 px-4 py-2">admin</td>
-                        <td className="border border-gray-300 px-4 py-2">admin</td>
-                        <td className="border border-gray-300 px-4 py-2">admin</td>
-                    </tr>
-                    <tr className="bg-white">
-                        <td className="border border-gray-300 px-4 py-2">Jhon</td>
-                        <td className="border border-gray-300 px-4 py-2">Doe</td>
-                        <td className="border border-gray-300 px-4 py-2">admin</td>
-                    </tr>
-                    <tr className="bg-gray-100">
-                        <td className="border border-gray-300 px-4 py-2">Rudy</td>
-                        <td className="border border-gray-300 px-4 py-2">rudy</td>
-                        <td className="border border-gray-300 px-4 py-2">journalist</td>
-                    </tr>
-                    <tr className="bg-white">
-                        <td className="border border-gray-300 px-4 py-2">ruben</td>
-                        <td className="border border-gray-300 px-4 py-2">ruben</td>
-                        <td className="border border-gray-300 px-4 py-2">journalist</td>
-                    </tr>
-                    <tr className="bg-gray-100">
-                        <td className="border border-gray-300 px-4 py-2">reader</td>
-                        <td className="border border-gray-300 px-4 py-2">reader</td>
-                        <td className="border border-gray-300 px-4 py-2">reader</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <h3 className="text-xl font-semibold mb-4">{t('userAccounts')}</h3>
+        <table className="table-auto border-collapse border border-gray-300 w-full">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="border border-gray-300 px-4 py-2">{t('login.username')}</th>
+              <th className="border border-gray-300 px-4 py-2">{t('login.password')}</th>
+              <th className="border border-gray-300 px-4 py-2">{t('login.role')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="bg-gray-100">
+              <td className="border border-gray-300 px-4 py-2">admin</td>
+              <td className="border border-gray-300 px-4 py-2">admin</td>
+              <td className="border border-gray-300 px-4 py-2">admin</td>
+            </tr>
+            <tr className="bg-white">
+              <td className="border border-gray-300 px-4 py-2">Jhon</td>
+              <td className="border border-gray-300 px-4 py-2">Doe</td>
+              <td className="border border-gray-300 px-4 py-2">admin</td>
+            </tr>
+            <tr className="bg-gray-100">
+              <td className="border border-gray-300 px-4 py-2">Rudy</td>
+              <td className="border border-gray-300 px-4 py-2">rudy</td>
+              <td className="border border-gray-300 px-4 py-2">journalist</td>
+            </tr>
+            <tr className="bg-white">
+              <td className="border border-gray-300 px-4 py-2">ruben</td>
+              <td className="border border-gray-300 px-4 py-2">ruben</td>
+              <td className="border border-gray-300 px-4 py-2">journalist</td>
+            </tr>
+            <tr className="bg-gray-100">
+              <td className="border border-gray-300 px-4 py-2">reader</td>
+              <td className="border border-gray-300 px-4 py-2">reader</td>
+              <td className="border border-gray-300 px-4 py-2">reader</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

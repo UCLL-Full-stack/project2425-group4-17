@@ -3,6 +3,9 @@ import { useRouter } from 'next/router';
 import UserService from '@services/UserService';
 import Header from '@components/header';
 import styles from '@styles/signup.module.css';
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { GetServerSideProps } from 'next';
 
 const SignupPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -13,6 +16,7 @@ const SignupPage: React.FC = () => {
   const [role, setRole] = useState('reader');
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { t } = useTranslation('common');
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -26,10 +30,10 @@ const SignupPage: React.FC = () => {
         router.push('/login');
       } else {
         const errorData = await response.json();
-        setError(errorData.message || 'Failed to create user.');
+        setError(errorData.message || t('Signup.error'));
       }
     } catch (err) {
-      setError('Failed to create user.');
+      setError(t('Signup.errorMessage'));
     }
   };
 
@@ -38,10 +42,10 @@ const SignupPage: React.FC = () => {
       <Header />
       <main className="p-6 min-h-screen flex flex-col items-center">
         <div className={styles.signupContainer}>
-          <h1>Sign Up</h1>
+          <h1>{t('Signup.title')}</h1>
           {error && <div className={styles.errorMessage}>{error}</div>}
           <form onSubmit={handleSubmit} className={styles.signupForm}>
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">{t('Signup.username')}</label>
             <input
               id="username"
               type="text"
@@ -49,7 +53,7 @@ const SignupPage: React.FC = () => {
               onChange={(e) => setUsername(e.target.value)}
               required
             />
-            <label htmlFor="firstName">First Name</label>
+            <label htmlFor="firstName">{t('Signup.firstName')}</label>
             <input
               id="firstName"
               type="text"
@@ -57,7 +61,7 @@ const SignupPage: React.FC = () => {
               onChange={(e) => setFirstName(e.target.value)}
               required
             />
-            <label htmlFor="lastName">Last Name</label>
+            <label htmlFor="lastName">{t('Signup.lastName')}</label>
             <input
               id="lastName"
               type="text"
@@ -65,7 +69,7 @@ const SignupPage: React.FC = () => {
               onChange={(e) => setLastName(e.target.value)}
               required
             />
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t('Signup.email')}</label>
             <input
               id="email"
               type="email"
@@ -73,7 +77,7 @@ const SignupPage: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">{t('Signup.password')}</label>
             <input
               id="password"
               type="password"
@@ -81,24 +85,34 @@ const SignupPage: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <label htmlFor="role">Role</label>
+            <label htmlFor="role">{t('Signup.role')}</label>
             <select
               id="role"
               value={role}
               onChange={(e) => setRole(e.target.value)}
               required
               style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-            >   
-              <option value="admin">Admin</option>
-              <option value="journalist">Journalist</option>
-              <option value="reader">Reader</option>
+            >
+              <option value="admin">{t('Signup.admin')}</option>
+              <option value="journalist">{t('Signup.journalist')}</option>
+              <option value="reader">{t('Signup.reader')}</option>
             </select>
-            <button type="submit">Sign Up</button>
+            <button type="submit">{t('Signup.submit')}</button>
           </form>
         </div>
       </main>
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { locale } = context;
+
+  return {
+      props: {
+          ...(await serverSideTranslations(locale ?? "en", ["common", "Signup"])),
+      },
+  };
 };
 
 export default SignupPage;

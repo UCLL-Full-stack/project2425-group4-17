@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'next-i18next';
 import { Article, ReviewInput } from '@types';
 import ArticleService from '@services/ArticleService';
 import ReviewService from '@services/ReviewService';
@@ -7,6 +8,7 @@ import styles from '@styles/home.module.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const ArticlesOverviewTableByToday: React.FC = () => {
+    const { t } = useTranslation();
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -25,13 +27,13 @@ const ArticlesOverviewTableByToday: React.FC = () => {
                 const sortedData = data.sort((a: Article, b: Article) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
                 setArticles(sortedData);
             } catch (err) {
-                setError('Failed to fetch articles.');
+                setError(t('articleOverview.errorNotFetched'));
             } finally {
                 setLoading(false);
             }
         };
         fetchArticles();
-    }, []);
+    }, [t]);
 
     const toggleArticleDetails = (id: number) => {
         setExpandedArticleId(expandedArticleId === id ? null : id);
@@ -50,26 +52,26 @@ const ArticlesOverviewTableByToday: React.FC = () => {
 
         const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
         if (!user || !user.token) {
-            setReviewError('You must be logged in to create a review.');
+            setReviewError(t('articleOverview.errorNotLoggedIn'));
             setReviewLoading(false);
             return;
         }
 
         const article = articles.find(article => article.id === articleId);
         if (!article) {
-            setReviewError('Article not found.');
+            setReviewError(t('articleOverview.errorNotFound'));
             setReviewLoading(false);
             return;
         }
 
         if (article.user.id === user.id) {
-            setReviewError('You cannot review your own article.');
+            setReviewError(t('articleOverview.errorOwn'));
             setReviewLoading(false);
             return;
         }
 
         if (article.reviews.some(review => review.user.id === user.id)) {
-            setReviewError('You have already reviewed this article.');
+            setReviewError(t('articleOverview.errorAlreadyLiked'));
             setReviewLoading(false);
             return;
         }
@@ -89,7 +91,7 @@ const ArticlesOverviewTableByToday: React.FC = () => {
             const sortedUpdatedArticles = updatedArticles.sort((a: Article, b: Article) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
             setArticles(sortedUpdatedArticles);
         } catch (err) {
-            setReviewError('Failed to create review.');
+            setReviewError(t('articleOverview.errorCreateReview'));
         } finally {
             setReviewLoading(false);
         }
@@ -98,13 +100,13 @@ const ArticlesOverviewTableByToday: React.FC = () => {
     const handleLikeArticle = async (articleId: number) => {
         const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
         if (!user || !user.token) {
-            alert('You must be logged in to like an article.');
+            alert(t('articleOverview.errorNotLoggedIn'));
             return;
         }
 
         const article = articles.find(article => article.id === articleId);
         if (!article) {
-            alert('Article not found.');
+            alert(t('articleOverview.errorNotFound'));
             return;
         }
         try {
@@ -113,29 +115,29 @@ const ArticlesOverviewTableByToday: React.FC = () => {
             const sortedUpdatedArticles = updatedArticles.sort((a: Article, b: Article) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
             setArticles(sortedUpdatedArticles);
         } catch (err) {
-            alert('You have already liked this article.');
+            alert(t('articleOverview.errorAlreadyLiked'));
         }
     };
 
     const filteredArticles = articles.filter(article => article.title.toLowerCase().includes(searchQuery.toLowerCase()));
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <p>{t('loading', 'Loading...')}</p>;
     if (error) return <p>{error}</p>;
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.subTitle}>Today's Articles</h1>
+            <h1 className={styles.subTitle}>{t('articleOverview.Today')}</h1>
             <div className={styles['search-container']}>
                 <input
                     type="text"
-                    placeholder="Search by title"
+                    placeholder={t('articleOverview.listTitle')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className={styles['search-input']}
                 />
             </div>
             {filteredArticles.length === 0 ? (
-                <p>No articles found.</p>
+                <p>{t('articleOverview.notFound')}</p>
             ) : (
                 <div className={styles.articlesGrid}>
                     {filteredArticles.map((article) => (
@@ -162,7 +164,7 @@ const ArticlesOverviewTableByToday: React.FC = () => {
                                 {article.title}
                             </h2>
                             <p className={styles.articleType}>{article.articleType}</p>
-                            <p className={styles.articleLikes}>{article.articleLikes.length} Likes</p>
+                            <p className={styles.articleLikes}>{article.articleLikes.length} {t('articleOverview.Likes')}</p>
                             {expandedArticleId === article.id && (
                                 <div className={styles.articleDetails} onClick={(e) => e.stopPropagation()}>
                                     <div>
@@ -171,7 +173,7 @@ const ArticlesOverviewTableByToday: React.FC = () => {
                                     <div>
                                         <img src={article.picture} alt={article.title} className={styles['article-image']} />
                                     </div>
-                                    <p className={styles.author}>By: {article.user.username}</p>
+                                    <p className={styles.author}>{t('articleOverview.by')} {article.user.username}</p>
                                     <hr />
                                     <div className={styles['grid-article-details-like']}>
                                         <div>
@@ -181,7 +183,7 @@ const ArticlesOverviewTableByToday: React.FC = () => {
                                         </div>
                                         <div>
                                             <p className={styles['published-at']}>
-                                                Published at:{' '}
+                                                {t('articleOverview.publishedAt')}{' '}
                                                 {new Date(article.publishedAt).toLocaleTimeString([], {
                                                     hour: '2-digit',
                                                     minute: '2-digit',
@@ -191,9 +193,9 @@ const ArticlesOverviewTableByToday: React.FC = () => {
                                     </div>
                                     <br />
                                     <div className={styles.reviews}>
-                                        <h3>Reviews:</h3>
+                                        <h3>{t('articleOverview.review')}</h3>
                                         {article.reviews.length === 0 ? (
-                                            <p>No reviews found.</p>
+                                            <p>{t('articleOverview.reviewsNotFound')}</p>
                                         ) : (
                                             <ul>
                                                 {article.reviews.map((review) => (
@@ -210,7 +212,7 @@ const ArticlesOverviewTableByToday: React.FC = () => {
                                         )}
                                     </div>
                                     <div className={styles['review-form']}>
-                                        <h3>Write a Review:</h3>
+                                        <h3>{t('articleOverview.write')}</h3>
                                         <form
                                             onSubmit={(e) => {
                                                 e.preventDefault();
@@ -219,7 +221,7 @@ const ArticlesOverviewTableByToday: React.FC = () => {
                                             onClick={(e) => e.stopPropagation()}
                                         >
                                             <div>
-                                                <label htmlFor="reviewTitle">Title</label>
+                                                <label htmlFor="reviewTitle">{t('articleOverview.listTitle')}</label>
                                                 <input
                                                     type="text"
                                                     id="reviewTitle"
@@ -229,7 +231,7 @@ const ArticlesOverviewTableByToday: React.FC = () => {
                                                 />
                                             </div>
                                             <div>
-                                                <label htmlFor="reviewContent">Content</label>
+                                                <label htmlFor="reviewContent">{t('articleOverview.content')}</label>
                                                 <textarea
                                                     id="reviewContent"
                                                     value={reviewContent}
@@ -238,7 +240,7 @@ const ArticlesOverviewTableByToday: React.FC = () => {
                                                 />
                                             </div>
                                             <div>
-                                                <label htmlFor="reviewRating">Rating (1-5)</label>
+                                                <label htmlFor="reviewRating">{t('articleOverview.rating')} (1-5)</label>
                                                 <input
                                                     type="number"
                                                     id="reviewRating"
@@ -251,7 +253,7 @@ const ArticlesOverviewTableByToday: React.FC = () => {
                                             </div>
                                             {reviewError && <p style={{ color: 'red' }}>{reviewError}</p>}
                                             <button type="submit" disabled={reviewLoading}>
-                                                {reviewLoading ? 'Submitting...' : 'Submit Review'}
+                                                {reviewLoading ? t('loading', 'Submitting...') : t('articleOverview.submit', 'Submit Review')}
                                             </button>
                                         </form>
                                     </div>

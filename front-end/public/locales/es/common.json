@@ -1,6 +1,7 @@
 {
-  "app.title": "The Voyager",
-  "app.Welcome": "¡Bienvenido a The Voyager!",
+  "app.title": "El viajero",
+  "app.Welcome": "¡Bienvenido a El viajero!",
+  "app.content": "Tu fuente de noticias diaria",
   "loading": "cargando...",
   "articleOverview": {
     "notFound": "No se encontraron artículos.",
@@ -20,7 +21,9 @@
     "reviewsNotFound": "No se encontraron reseñas.",
     "write": "Escribir una reseña:",
     "content": "Contenido",
-    "rating": "Calificación"
+    "rating": "Calificación",
+    "submit": "Enviar reseña",
+    "by": "Por"
   },
   "paper": {
     "paperClass": "Papel para",
@@ -53,7 +56,91 @@
     "createArticle": "Crear artículo",
     "paper": "Papel",
     "logout": "Cerrar sesión",
-    "welcome": "Bienvenido, ",
+    "welcome": "¡Bienvenido, {username}!",
+    "login": "Iniciar sesión",
     "createAccount": "Crear cuenta"
-  }
+  },
+  "articles": {
+    "title": "Artículos",
+    "loading": "Cargando...",
+    "errorNoToken": "No se encontró token. Por favor, inicie sesión.",
+    "errorFetch": "No se pudieron obtener los artículos.",
+    "allArticles": "Todos los Artículos",
+    "noArticles": "No se encontraron artículos.",
+    "tableHeaders": {
+      "title": "Título",
+      "publishedDate": "Fecha de Publicación",
+      "type": "Tipo"
+    }
+  },
+  "createArticle": {
+      "pageTitle": "Crear Artículo",
+      "formTitle": "Crear Artículo",
+      "title": "Título",
+      "summary": "Resumen",
+      "picture": "URL de la Imagen",
+      "articleType": "Tipo de Artículo",
+      "selectArticleType": "Seleccione un tipo de artículo",
+      "options": {
+        "informatif": "Informativo",
+        "jobAdd": "Anuncio de Trabajo",
+        "productAdd": "Anuncio de Producto",
+        "sport": "Deporte",
+        "politics": "Política",
+        "globalNews": "Noticias Globales",
+        "showBizz": "Espectáculos"
+      },
+      "submitButton": "Crear Artículo",
+      "creating": "Creando...",
+      "errorNoLogin": "Debe iniciar sesión para crear un artículo.",
+      "errorFailed": "No se pudo crear el artículo."
+    },
+    "editArticle": {
+      "title": "Título",
+      "summary": "Resumen",
+      "pictureUrl": "URL de la imagen",
+      "articleType": "Tipo de artículo",
+      "informative": "Informativo",
+      "jobAdd": "Anuncio de empleo",
+      "productAdd": "Anuncio de producto",
+      "sport": "Deportes",
+      "politics": "Política",
+      "globalNews": "Noticias globales",
+      "showBizz": "Espectáculos",
+      "save": "Guardar",
+      "saving": "Guardando...",
+      "editArticle": "Editar artículo",
+      "errorLogin": "Debes estar logueado para editar un artículo.",
+      "errorUpdate": "Error al actualizar el artículo."
+    },
+    "Signup": {
+      "title": "Registrarse",
+      "username": "Nombre de usuario",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "role": "Rol",
+      "admin": "Administrador",
+      "journalist": "Periodista",
+      "reader": "Lector",
+      "submit": "Registrarse",
+      "error": "Error al crear el usuario.",
+      "errorMessage": "Hubo un error al crear la cuenta de usuario."
+    },
+    "userInfo": {
+      "title": "Información de usuario",
+      "username": "Nombre de usuario",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "email": "Correo electrónico",
+      "role": "Rol",
+      "edit": "Editar",
+      "save": "Guardar",
+      "delete": "Eliminar",
+      "noArticles": "No se encontraron artículos.",
+      "errorFetchUser": "Error al obtener la información del usuario.",
+      "errorUpdateUser": "Error al actualizar la información del usuario.",
+      "errorDeleteUser": "Error al eliminar el usuario."
+    }
 }

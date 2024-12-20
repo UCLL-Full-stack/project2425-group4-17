@@ -1,6 +1,7 @@
 {
     "app.title": "The Voyager",
     "app.Welcome":"Welcome to The Voyager!",
+    "app.content":"Your daily news source",
     "loading": "loading...",
     "articleOverview":{
         "notFound": "No articles found.",
@@ -20,7 +21,9 @@
         "reviewsNotFound":"No reviews found.",
         "write":"Write a Review:",
         "content":"Content",
-        "rating":"Rating"
+        "rating":"Rating",
+        "submit":"Submit Review",
+        "by":"By"
     },
     "paper":{
         "paperClass":"Paper for",
@@ -48,13 +51,96 @@
         "usernameRequired":"Username  is required"
     },
     "header":{
-        "home":"Home",
+        "home": "Home",
         "articles": "Articles",
         "createArticle": "Create Article",
-        "paper":"Paper",
-        "logout":"Logout",
-        "welcome": "Welcome, ",
+        "paper": "Paper",
+        "logout": "Logout",
+        "welcome": "Welcome, {username}!",
+        "login": "Login",
         "createAccount": "Create Account"
+    },
+    "articles": {
+        "title": "Articles",
+        "loading": "Loading...",
+        "errorNoToken": "No token found. Please log in.",
+        "errorFetch": "Failed to fetch articles.",
+        "allArticles": "All Articles",
+        "noArticles": "No articles found.",
+        "tableHeaders": {
+            "title": "Title",
+            "publishedDate": "Published Date",
+            "type": "Type"
+        }
+    },
+    "createArticle": {
+        "pageTitle": "Create Article",
+        "formTitle": "Create Article",
+        "title": "Title",
+        "summary": "Summary",
+        "picture": "Picture URL",
+        "articleType": "Article Type",
+        "selectArticleType": "Select an article type",
+        "options": {
+            "informatif": "Informative",
+            "jobAdd": "Job Ad",
+            "productAdd": "Product Ad",
+            "sport": "Sport",
+            "politics": "Politics",
+            "globalNews": "Global News",
+            "showBizz": "Showbiz"
+        },
+        "submitButton": "Create Article",
+        "creating": "Creating...",
+        "errorNoLogin": "You must be logged in to create an article.",
+        "errorFailed": "Failed to create article."
+    },
+    "editArticle": {
+        "title": "Title",
+        "summary": "Summary",
+        "pictureUrl": "Picture URL",
+        "articleType": "Article Type",
+        "informative": "Informative",
+        "jobAdd": "Job Ad",
+        "productAdd": "Product Ad",
+        "sport": "Sport",
+        "politics": "Politics",
+        "globalNews": "Global News",
+        "showBizz": "Show Bizz",
+        "save": "Save",
+        "saving": "Saving...",
+        "editArticle": "Edit Article",
+        "errorLogin": "You must be logged in to edit an article.",
+        "errorUpdate": "Failed to update article."
+    },
+    "Signup": {
+        "title": "Sign Up",
+        "username": "Username",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "password": "Password",
+        "role": "Role",
+        "admin": "Admin",
+        "journalist": "Journalist",
+        "reader": "Reader",
+        "submit": "Sign Up",
+        "error": "Failed to create user.",
+        "errorMessage": "There was an error while creating the user account."
+    },
+    "userInfo": {
+        "title": "User Info",
+        "username": "Username",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "role": "Role",
+        "edit": "Edit",
+        "save": "Save",
+        "delete": "Delete",
+        "noArticles": "No articles found.",
+        "errorFetchUser": "Failed to fetch user info.",
+        "errorUpdateUser": "Failed to update user info.",
+        "errorDeleteUser": "Failed to delete user."
     }
-    
 }

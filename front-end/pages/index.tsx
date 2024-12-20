@@ -25,14 +25,14 @@ const Home: React.FC = () => {
     <>
       <Head>
         <title>{t('app.title')}</title>
-        <meta name="description" content="Your daily news source" />
+        <meta name="description" content="{t('app.content')}" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <div>
         <Header />
         <main className="">
         <div className={styles.homeContainer}>
-            <h1 className={styles.title}>Welcome to The Voyager!</h1>
+            <h1 className={styles.title}>{t('app.Welcome')}</h1>
         </div>
         <ArticlesOverviewTableByToday />
         </main>

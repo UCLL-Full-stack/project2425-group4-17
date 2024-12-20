@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Article } from '@types';
+import { useTranslation } from 'next-i18next';
 
 const ArticlesOverviewTable: React.FC = () => {
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { t } = useTranslation('common');
 
     useEffect(() => {
         const fetchArticles = async () => {
             const token = localStorage.getItem('loggedInUser') ? JSON.parse(localStorage.getItem('loggedInUser') || '{}').token : null;
             if (!token) {
-                setError('No token found. Please log in.');
+                setError(t('articles.errorNoToken'));
                 setLoading(false);
                 return;
             }
@@ -28,29 +30,29 @@ const ArticlesOverviewTable: React.FC = () => {
                 const data = await response.json();
                 setArticles(data);
             } catch (err) {
-                setError('Failed to fetch articles.');
+                setError(t('articles.errorFetch'));
             } finally {
                 setLoading(false);
             }
         };
         fetchArticles();
-    }, []);
+    }, [t]);
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <p>{t('articles.loading')}</p>;
     if (error) return <p>{error}</p>;
 
     return (
         <div>
-            <h1>All Articles</h1>
+            <h1>{t('articles.allArticles')}</h1>
             {articles.length === 0 ? (
-                <p>No articles found.</p>
+                <p>{t('articles.noArticles')}</p>
             ) : (
                 <table className="table table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">Title</th>
-                            <th scope="col">Published Date</th>
-                            <th scope="col">Type</th>
+                            <th scope="col">{t('articles.tableHeaders.title')}</th>
+                            <th scope="col">{t('articles.tableHeaders.publishedDate')}</th>
+                            <th scope="col">{t('articles.tableHeaders.type')}</th>
                         </tr>
                     </thead>
                     <tbody>

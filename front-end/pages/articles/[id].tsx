@@ -4,6 +4,9 @@ import Head from 'next/head';
 import Header from '@components/header';
 import ArticleService from '@services/ArticleService';
 import styles from '@styles/articleForm.module.css';
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import { GetServerSideProps } from 'next';
 
 const EditArticle: React.FC = () => {
   const router = useRouter();
@@ -14,6 +17,7 @@ const EditArticle: React.FC = () => {
   const [articleType, setArticleType] = useState('Article type');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -22,7 +26,7 @@ const EditArticle: React.FC = () => {
 
     const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
     if (!user || !user.token) {
-      setError('You must be logged in to edit an article.');
+      setError(t('editArticle.errorLogin'));
       setLoading(false);
       return;
     }
@@ -38,7 +42,7 @@ const EditArticle: React.FC = () => {
       await ArticleService.updateArticle(id as string, articleData, user.token);
       router.push('/user');
     } catch (err) {
-      setError('Failed to update article.');
+      setError(t('editArticle.errorUpdate'));
     } finally {
       setLoading(false);
     }
@@ -47,15 +51,15 @@ const EditArticle: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Edit Article</title>
+        <title>{t('editArticle.editArticle')}</title>
       </Head>
       <Header />
       <br /><br />
       <main className={styles.formContainer}>
-        <h1>Edit Article</h1>
+        <h1>{t('editArticle.editArticle')}</h1>
         <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="title">Title</label>
+            <label htmlFor="title">{t('editArticle.title')}</label>
             <input
               type="text"
               id="title"
@@ -65,7 +69,7 @@ const EditArticle: React.FC = () => {
             />
           </div>
           <div>
-            <label htmlFor="summary">Summary</label>
+            <label htmlFor="summary">{t('editArticle.summary')}</label>
             <textarea
               id="summary"
               value={summary}
@@ -74,7 +78,7 @@ const EditArticle: React.FC = () => {
             />
           </div>
           <div>
-            <label htmlFor="picture">Picture URL</label>
+            <label htmlFor="picture">{t('editArticle.pictureUrl')}</label>
             <input
               type="text"
               id="picture"
@@ -85,31 +89,41 @@ const EditArticle: React.FC = () => {
           </div>
           <div>
             <br />
-            <label htmlFor="articleType">Article Type</label>
+            <label htmlFor="articleType">{t('editArticle.articleType')}</label>
             <select
               id="articleType"
               value={articleType}
               onChange={(e) => setArticleType(e.target.value)}
               required
             >
-              <option value="Informatif">Informatif</option>
-              <option value="Job add">Job add</option>
-              <option value="product add">product add</option>
-              <option value="sport">sport</option>
-              <option value="politics">politics</option>
-              <option value="global news">global news</option>
-              <option value="show bizz">show bizz</option>
+              <option value="Informatif">{t('editArticle.informative')}</option>
+              <option value="Job add">{t('editArticle.jobAdd')}</option>
+              <option value="product add">{t('editArticle.productAdd')}</option>
+              <option value="sport">{t('editArticle.sport')}</option>
+              <option value="politics">{t('editArticle.politics')}</option>
+              <option value="global news">{t('editArticle.globalNews')}</option>
+              <option value="show bizz">{t('editArticle.showBizz')}</option>
             </select>
           </div>
           <br />
           {error && <p className={styles.errorMessage}>{error}</p>}
           <button type="submit" disabled={loading}>
-            {loading ? 'Saving...' : 'Save'}
+            {loading ? t('editArticle.saving') : t('editArticle.save')}
           </button>
         </form>
       </main>
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { locale } = context;
+
+  return {
+    props: {
+      ...(await serverSideTranslations(locale ?? "en", ["common", "editArticle"])),
+    },
+  };
 };
 
 export default EditArticle;
