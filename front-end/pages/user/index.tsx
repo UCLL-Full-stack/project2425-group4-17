@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import UserService from '@services/UserService';
+import ArticleService from '@services/ArticleService';
 import Header from '@components/header';
-import styles from '@styles/profile.module.css';
+import profileStyles from '@styles/profile.module.css';
+import homeStyles from '@styles/home.module.css';
 
 const UserInfo: React.FC = () => {
   const [user, setUser] = useState<any>(null);
@@ -10,6 +12,7 @@ const UserInfo: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [articles, setArticles] = useState<any[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -26,6 +29,11 @@ const UserInfo: React.FC = () => {
         setUser(userData);
         setFirstName(userData.firstName);
         setLastName(userData.lastName);
+
+        const articlesResponse = await ArticleService.getAllArticlesProfile();
+        const articlesData = await articlesResponse.json();
+        const userArticles = articlesData.filter((article: any) => article.user.id === userData.id);
+        setArticles(userArticles);
       } catch (err) {
         setError('Failed to fetch user info.');
       }
@@ -65,6 +73,10 @@ const UserInfo: React.FC = () => {
     }
   };
 
+  const handleEditArticleClick = (articleId: number) => {
+    router.push(`/articles/${articleId}`);
+  };
+
   if (error) {
     return <div>{error}</div>;
   }
@@ -76,9 +88,9 @@ const UserInfo: React.FC = () => {
   return (
     <>
       <Header />
-      <div className={styles.profileContainer}>
-        <h1 className={styles.profileTitle}>User Info</h1>
-        <div className={styles.profileDetails}>
+      <div className={profileStyles.profileContainer}>
+        <h1 className={profileStyles.profileTitle}>User Info</h1>
+        <div className={profileStyles.profileDetails}>
           <p><strong>Username:</strong> {user.username}</p>
           <p><strong>First Name:</strong> {isEditing ? (
             <input
@@ -101,14 +113,30 @@ const UserInfo: React.FC = () => {
           <p><strong>Email:</strong> {user.email}</p>
           <p><strong>Role:</strong> {user.role}</p>
         </div>
-        <div className={styles.buttonContainer}>
+        <div className={profileStyles.buttonContainer}>
           <button onClick={isEditing ? handleSaveClick : handleEditClick}>
             {isEditing ? 'Save' : 'Edit'}
           </button>
-          <button onClick={handleDeleteClick} className={styles.deleteButton}>
+          <button onClick={handleDeleteClick} className={profileStyles.deleteButton}>
             Delete
           </button>
         </div>
+      </div>
+      <div className={homeStyles.articlesGrid}>
+        <br /><br />
+        <h3>Your Articles</h3>
+        {articles.length === 0 ? (
+          <p>No articles found.</p>
+        ) : (
+          articles.map(article => (
+            <div key={article.id} className={homeStyles.articleCard}>
+              <h3>{article.title}</h3>
+              <p>{article.summary}</p>
+              <p><strong>Published at:</strong> {new Date(article.publishedAt).toLocaleDateString()}</p>
+              <button onClick={() => handleEditArticleClick(article.id)}>Edit</button>
+            </div>
+          ))
+        )}
       </div>
     </>
   );
