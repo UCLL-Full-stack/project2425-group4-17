@@ -23,7 +23,8 @@
         "content":"Content",
         "rating":"Rating",
         "submit":"Submit Review",
-        "by":"By"
+        "by":"By",
+        "yourArticles": "your Articles"
     },
     "paper":{
         "paperClass":"Paper for",

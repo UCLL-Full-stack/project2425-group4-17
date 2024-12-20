@@ -128,7 +128,7 @@ const UserInfo: React.FC = () => {
       </div>
       <div className={homeStyles.articlesGrid}>
         <br /><br />
-        <h3>{t('userInfo.yourArticles')}</h3>
+        <h3>{t('articleOverview.yourArticles')}</h3>
         {articles.length === 0 ? (
           <p>{t('noArticles')}</p>
         ) : (
